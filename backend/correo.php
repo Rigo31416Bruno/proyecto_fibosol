@@ -6,6 +6,9 @@ use PHPMailer\PHPMailer\Exception;
 
 require('../libs/phpmailer/vendor/autoload.php');
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
 //Import PHPMailer classes into the global namespace
 //These must be at the top of your script, not inside a function
 
@@ -19,7 +22,7 @@ try {
     $mail->isSMTP();                                         //Enviar usando SMTP
     $mail->Host       = 'smtp.gmail.com';                    //SMTP de Gmail
     $mail->SMTPAuth   = true;                                //Autenticación SMTP
-    $mail->Username   = 'rigotrainer@gmail.com';            //Tu cuenta Gmail
+    $mail->Username   = $_ENV['GMAIL_PASSWORD'];           //Tu cuenta Gmail
     $mail->Password   = 'ueae hdpb hrcv lidw';              //App Password de Google
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;     //STARTTLS
     $mail->Port       = 587;                                 //Puerto TLS
@@ -30,8 +33,8 @@ try {
 
     //Content - texto plano
     $mail->isHTML(false);                                   //Enviar solo texto
-    $mail->Subject = 'Asunto del correo';
-    $mail->Body    = "Este es el cuerpo del correo en texto plano.\nPuedes usar saltos de línea.";
+    $mail->Subject = 'Rigoberto';
+    $mail->Body    = "Este es el cuerpo del correo en texto plano.\nPuedes usar saltos de línea. Rigoberto";
 
     $mail->send();
     echo 'Mensaje enviado';
