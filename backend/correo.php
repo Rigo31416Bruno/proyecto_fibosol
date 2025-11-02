@@ -4,34 +4,30 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require('../libs/phpmailer/vendor/autoload.php');
+// Cargar autoload de Composer (vendor está en la raíz del proyecto)
+require __DIR__ . '/../vendor/autoload.php';
 
-/*$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();*/
+// .env está en la raíz del proyecto (un nivel arriba de backend)
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->load();
+
+// DEBUG: asegurar que se cargaron las variables (no mostrar la contraseña)
+if (!getenv('SMTP_USER') || !getenv('SMTP_PASSWORD')) {
+    die("Faltan SMTP_USER o SMTP_PASSWORD. Verifica .env o variables de entorno\n");
+}
 
 $mail = new PHPMailer(true);
+// Ver más detalle durante pruebas SMTP (moverlo después de instanciar)
+$mail->SMTPDebug = SMTP::DEBUG_OFF;
+$mail->Debugoutput = 'echo';
 
 try {
-<<<<<<< HEAD
-    $mail->SMTPDebug = SMTP::DEBUG_SERVER;
-    $mail->Debugoutput = 'echo';
-=======
-    //Server settings
-    $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Desactivar debug en producción
-    $mail->isSMTP();                                         //Enviar usando SMTP
-    $mail->Host       = 'smtp.gmail.com';                    //SMTP de Gmail
-    $mail->SMTPAuth   = true;                                //Autenticación SMTP
-    $mail->Username   = $_ENV['GMAIL_PASSWORD'];           //Tu cuenta Gmail
-    $mail->Password   = '';              //App Password de Google
-    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;     //STARTTLS
-    $mail->Port       = 587;                                 //Puerto TLS
->>>>>>> 61e6aa1e9da467e9303f2f611cbced8af1082b33
-
-    $mail->isSMTP();                                         
+    $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';                    
     $mail->SMTPAuth   = true;                                
-    $mail->Username   = getenv('SMTP_USER');                 
-    $mail->Password   = getenv('SMTP_PASS');                 
+    // Trim para evitar saltos de línea
+    $mail->Username   = trim(getenv('SMTP_USER'));                 
+    $mail->Password   = trim(getenv('SMTP_PASSWORD'));             
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;     
     $mail->Port       = 587;                                 
 
@@ -43,12 +39,12 @@ try {
         ]
     ];
 
-    $mail->setFrom('reestablecercontrasena99@gmail.com', 'reestablecercontrasena99');
-    $mail->addAddress('reestablecercontrasena99@gmail.com', 'reestablecercontrasena99');
+    $mail->setFrom(getenv('SMTP_USER'), 'Mi App');
+    $mail->addAddress('r.castro23@info.uas.edu.mx', 'RIGOBERTO CASTRO PACHECO');
 
     $mail->isHTML(false);                                   
     $mail->Subject = 'Rigoberto';
-    $mail->Body    = "Este es el cuerpo del correo en texto plano.\nPuedes usar saltos de línea. Rigoberto";
+    $mail->Body    = "El codigo es: ";
 
     $mail->send();
     echo 'Mensaje enviado';

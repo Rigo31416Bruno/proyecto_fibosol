@@ -1,5 +1,4 @@
 <?php
-// ...existing code...
 
 class DB {
     private static ?PDO $instance = null;
@@ -27,7 +26,6 @@ class DB {
         return self::$instance;
     }
 
-    // Evita clonación/serialización del singleton
     private function __construct() {}
     private function __clone() {}
     public function __wakeup() { throw new \Exception('Cannot unserialize'); }
