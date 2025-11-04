@@ -1,5 +1,41 @@
 <?php
 
+class Conexion
+{
+    private $host = 'localhost';
+    private $user = 'root';
+    private $pass = '';
+    private $db = 'login_fidel';
+    private $port = 3306;
+    private $conn;
+
+    public function __construct()
+    {
+        $this->conn = mysqli_connect($this->host, $this->user, $this->pass, $this->db, $this->port);
+        if ($this->conn === false) {
+            throw new RuntimeException('MySQL connection error: ' . mysqli_connect_error());
+        }
+        
+        mysqli_set_charset($this->conn, 'utf8mb4');
+        return $this->conn;
+    }
+
+    public function getConnection(): \mysqli
+    {
+        return $this->conn;
+    }
+
+    public function __destruct()
+    {
+        if ($this->conn instanceof \mysqli) {
+            $this->conn->close();
+        }
+    }
+}
+
+
+
+/*
 class DB {
     private static ?PDO $instance = null;
 
@@ -30,3 +66,4 @@ class DB {
     private function __clone() {}
     public function __wakeup() { throw new \Exception('Cannot unserialize'); }
 }
+*/
