@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Verificación de correo</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 80px; }
+        #cancelar { margin-top: 30px; }
+    </style>
+</head>
+<body>
+    <h2>Verificando tu correo...</h2>
+    <p id="mensaje">Por favor, verifica tu correo electrónico. Esta ventana se actualizará automáticamente.</p>
+    <button id="cancelar">Cancelar</button>
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get('token');
+        if (!token) {
+            document.getElementById('mensaje').textContent = 'Token no proporcionado.';
+        } else {
+            let interval = setInterval(() => {
+                fetch(`/proyecto_fibosol-main/backend/estado_verificacion.php?token=${encodeURIComponent(token)}`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.success && data.verificado) {
+                            clearInterval(interval);
+                            document.getElementById('mensaje').textContent = '¡Correo verificado correctamente!';
+                        }
+                    });
+            }, 3000);
+        }
+        document.getElementById('cancelar').onclick = () => {
+            window.location.href = '/'; // O a donde quieras redirigir
+        };
+    </script>
+</body>
+</html>

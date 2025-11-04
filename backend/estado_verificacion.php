@@ -1,0 +1,36 @@
+<?php
+header('Content-Type: application/json; charset=utf-8');
+require __DIR__ . '/../db/conexion.php';
+
+$token = isset($_GET['token']) ? trim($_GET['token']) : null;
+if (!$token || strlen($token) < 10) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'message' => 'Token inválido.']);
+    exit;
+}
+
+try {
+    $dbObj = new Conexion();
+    $conn = $dbObj->getConnection();
+
+    $stmt = $conn->prepare('SELECT correo_verificado FROM usuarios WHERE verification_token = ? LIMIT 1');
+    if (!$stmt) throw new RuntimeException($conn->error);
+    $stmt->bind_param('s', $token);
+    $stmt->execute();
+    $stmt->bind_result($verificado);
+    if (!$stmt->fetch()) {
+        http_response_code(404);
+        echo json_encode(['success' => false, 'message' => 'Token no encontrado.']);
+        $stmt->close();
+        exit;
+    }
+    $stmt->close();
+
+    echo json_encode(['success' => true, 'verificado' => (bool)$verificado]);
+    exit;
+} catch (Exception $e) {
+    http_response_code(500);
+    echo json_encode(['success' => false, 'message' => 'Error de base de datos.']);
+    exit;
+}
+?>
