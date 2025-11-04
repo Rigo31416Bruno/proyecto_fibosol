@@ -148,8 +148,11 @@
             if (!isValid) return;
 
             // Prepare data
+            // const formData = new FormData(form);
+            // const data = Object.fromEntries(formData);
+
             const formData = new FormData(form);
-            const data = Object.fromEntries(formData);
+            const body = new URLSearchParams(formData).toString();
 
             // Show loading state
             btnSubmit.disabled = true;
@@ -158,13 +161,13 @@
             successMessage.classList.remove('show');
 
             try {
-                // AJAX request al backend PHP
+                // AJAX request al backend PHP usando serialize (application/x-www-form-urlencoded)
                 const response = await fetch('../backend/registro.php', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8'
                     },
-                    body: JSON.stringify(data)
+                    body: body
                 });
 
                 const result = await response.json();

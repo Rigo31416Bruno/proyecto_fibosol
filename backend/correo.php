@@ -44,7 +44,7 @@ if (!filter_var($mailFrom, FILTER_VALIDATE_EMAIL)) {
 $mail = new PHPMailer(true);
 try {
     $mail->isSMTP();
-    $mail->SMTPDebug = 0; // 0
+    $mail->SMTPDebug = 2; // 0
     $mail->Host       = $smtpHost;
     $mail->SMTPAuth   = true;
     $mail->Username   = $smtpUser;
@@ -62,7 +62,7 @@ try {
 
     $mail->isHTML(true);
     $mail->Subject = 'Prueba';
-    $mail->Body    = 'Correo de prueba';
+    $mail->Body    = 'Tu codigo es: ';
     $mail->AltBody = 'Correo de prueba (texto)';
 
     $mail->send();
