@@ -1,0 +1,183 @@
+:root{
+  --bg1:#0f1724;
+  --bg2:#18324a;
+  --card:#ffffff;
+  --accent:#3b82f6;
+  --accent-2:#06b6d4;
+  --muted:#6b7280;
+  --danger:#ef4444;
+  --success:#16a34a;
+  --radius:12px;
+  --glass: rgba(255,255,255,0.06);
+  --shadow: 0 8px 30px rgba(2,6,23,0.6);
+  --transition: 180ms cubic-bezier(.2,.9,.2,1);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(135deg,var(--bg1) 0%, var(--bg2) 100%);
+  color:#0b1220;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:40px 20px;
+}
+
+/* Contenedor centrado */
+.cuadro{
+  width:100%;
+  max-width:420px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow:var(--shadow);
+  backdrop-filter: blur(6px) saturate(120%);
+  border: 1px solid rgba(255,255,255,0.04);
+}
+
+/* Encabezado (opcional) */
+.cuadro h1{
+  margin:0 0 14px 0;
+  font-size:1.25rem;
+  color:#e6eef8;
+  letter-spacing:0.2px;
+}
+
+/* Formulario */
+#registro-form{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* Labels */
+#registro-form label{
+  font-size:0.85rem;
+  color: #dbeafe;
+  margin-bottom:4px;
+  display:block;
+}
+
+/* Inputs */
+#registro-form input[type="text"],
+#registro-form input[type="email"],
+#registro-form input[type="password"]{
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.06);
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  color:#e6eef8;
+  font-size:0.98rem;
+  transition: box-shadow var(--transition), transform var(--transition), border-color var(--transition);
+  outline:none;
+  appearance:none;
+}
+
+/* Input focus */
+#registro-form input:focus{
+  border-color: rgba(59,130,246,0.85);
+  box-shadow: 0 6px 18px rgba(59,130,246,0.12);
+  transform: translateY(-1px);
+}
+
+/* Placeholder color */
+#registro-form input::placeholder{
+  color: rgba(230,238,248,0.45);
+}
+
+/* Button */
+#registro-form button[type="submit"]{
+  margin-top:4px;
+  padding:12px 16px;
+  border-radius:10px;
+  border: none;
+  cursor: pointer;
+  color: white;
+  font-weight:600;
+  background: linear-gradient(90deg,var(--accent), var(--accent-2));
+  box-shadow: 0 8px 20px rgba(59,130,246,0.18), inset 0 -2px 6px rgba(0,0,0,0.12);
+  transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition);
+}
+
+#registro-form button[type="submit"]:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(59,130,246,0.22);
+}
+#registro-form button[type="submit"]:active{
+  transform: translateY(0);
+}
+#registro-form button[disabled]{
+  opacity:0.7;
+  cursor:not-allowed;
+  transform:none;
+  box-shadow:none;
+}
+
+/* Mensajes de estado */
+#message{
+  margin-top:8px;
+  font-size:0.95rem;
+  min-height:1.2rem;
+  color:var(--muted);
+}
+
+/* Estados */
+#message.success{ color: var(--success); background: linear-gradient(90deg, rgba(16,185,129,0.06), transparent); padding:6px 8px; border-radius:8px; }
+#message.error{ color: var(--danger); background: linear-gradient(90deg, rgba(239,68,68,0.04), transparent); padding:6px 8px; border-radius:8px; }
+
+/* Pequeñas mejoras responsive */
+@media (max-width:420px){
+  .cuadro{ padding:20px; border-radius:10px; }
+  #registro-form input, #registro-form button{ font-size:0.96rem; padding:11px 12px; }
+}
+
+/* Accesibilidad: focus visible */
+:focus-visible{
+  outline: 3px solid rgba(99,102,241,0.12);
+  outline-offset: 2px;
+}
+
+.enlace-registro {
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+  margin-top: 12px;
+}
+
+.enlace-registro a {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb 0%, #06b6d4 100%);
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 700;
+  box-shadow: 0 8px 20px rgba(37,99,235,0.16);
+  transition: transform 160ms ease, box-shadow 160ms ease, opacity 160ms;
+  letter-spacing: 0.2px;
+}
+
+.enlace-registro a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 14px 30px rgba(37,99,235,0.22);
+  opacity: 0.98;
+}
+
+.enlace-registro a:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 14px rgba(37,99,235,0.12);
+}
+
+.enlace-registro a.secondary {
+  background: transparent;
+  color: #dbeafe;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: none;
+  font-weight: 600;
+}
