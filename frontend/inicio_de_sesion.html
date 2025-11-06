@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="../styles/inicio_de_sesion.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+<body>
+    <div class="contenedor-login">
+        <div class="encabezado-login">
+            <h1>Bienvenido</h1>
+            <p>Ingresa a tu cuenta</p>
+        </div>
+        
+        <form id="loginForm">
+            <div class="grupo-formulario">
+                <label for="correo">Correo electronico</label>
+                <input type="email" id="correo" name="correo" placeholder="tu@email.com" required>
+            </div>
+            
+            <div class="grupo-formulario">
+                <label for="contrasena">Contraseña</label>
+                <div class="contenedor-contrasena">
+                    <input type="password" id="contrasena" name="contrasena" placeholder="••••••••" required>
+                    <button type="button" class="boton-mostrar" onclick="togglePassword()">Mostrar</button>
+                </div>
+            </div>
+            
+            <div class="olvidar-contrasena">
+                <a href="#">¿Olvidaste tu contraseña?</a>
+            </div>
+            
+            <button type="submit" class="boton-login">Iniciar Sesion</button> <br><br>
+
+            <div id="mensaje"></div>
+            
+            <div class="divisor">o</div>
+            
+            <div class="enlace-registro">
+                ¿No tienes cuenta? <a href="registro.php">Regístrate aqui</a>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#loginForm').on('submit', function(e) {
+                e.preventDefault();
+                const correo = $('#correo').val().trim();
+                const contrasena = $('#contrasena').val();
+
+                $('#mensaje').text('').css('color','');
+
+                $.ajax({
+                    type: "POST",
+                    url: "../backend/inicio_de_sesion.php",
+                    data: { correo: correo, contrasena: contrasena },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response && response.message) {
+                            $('#mensaje').text(response.message);
+                            if (response.success) $('#mensaje').css('color','green');
+                            else $('#mensaje').css('color','crimson');
+                        } else {
+                            $('#mensaje').text('Respuesta inesperada del servidor');
+                        }
+                    },
+                    error: function(xhr, status) {
+                        console.error(status, xhr.responseText);
+                        $('#mensaje').text('Error al enviar los datos.').css('color','crimson');
+                    }
+                });
+            });
+        });
+
+        function togglePassword() {
+            const input = document.getElementById('contrasena');
+            const boton = document.querySelector('.boton-mostrar');
+            
+            if (input.type === 'password') {
+                input.type = 'text';
+                boton.textContent = 'Ocultar';
+            } else {
+                input.type = 'password';
+                boton.textContent = 'Mostrar';
+            }
+        }
+    </script>
+</body>
+</html>
