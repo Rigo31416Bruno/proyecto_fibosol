@@ -62,8 +62,15 @@
                     success: function(response) {
                         if (response && response.message) {
                             $('#mensaje').text(response.message);
-                            if (response.success) $('#mensaje').css('color','green');
-                            else $('#mensaje').css('color','crimson');
+                            if (response.success) {
+                                $('#mensaje').css('color','green');
+                                // Redirigir después de 2 segundos si el login fue correcto
+                                setTimeout(function() {
+                                    window.location.href = 'inicio.php';
+                            }, 2000);
+                            } else {
+                                $('#mensaje').css('color','crimson');
+                            }
                         } else {
                             $('#mensaje').text('Respuesta inesperada del servidor');
                         }

@@ -43,9 +43,9 @@ if ($hash === '' || !password_verify($contrasena, $hash)) {
 }
 
 session_start();
-$_SESSION['user_id'] = (int)$user['ID_Usuario'];
-$_SESSION['user_name'] = $user['Nombre'];
-$_SESSION['user_email'] = $correo;
+$_SESSION['id_usuario'] = (int)$user['ID_Usuario'];
+$_SESSION['nombre'] = $user['Nombre'];
+$_SESSION['correo'] = $correo;
 
 echo json_encode(['success' => true, 'message' => 'Inicio de sesion correcto. Bienvenido ' . ($user['Nombre'] ?? '')], JSON_UNESCAPED_UNICODE);
 exit();
