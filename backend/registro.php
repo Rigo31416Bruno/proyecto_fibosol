@@ -14,7 +14,7 @@ if($nombre === '' || $correo === '' || $contrasena === ''){
 }
 
 if(!filter_var($correo, FILTER_VALIDATE_EMAIL)){
-    echo json_encode(['success' => false, 'message' => 'Correo no válido.']);
+    echo json_encode(['success' => false, 'message' => 'Correo no valido.']);
     exit();
 }
 
@@ -23,7 +23,7 @@ if(strlen($contrasena) < 4){
     exit();
 }
 
-// patrón: al menos un dígito y un carácter especial, mínimo 8 caracteres (ajusta si necesitas otra regla)
+// patrón: al menos un dígito y un carácter especial, mínimo 8 caracteres
 $patron = '/^(?=.*\d)(?=.*[^\w\s]).{8,}$/u';
 if (!preg_match($patron, $contrasena)) {
     echo json_encode(['success' => false, 'message' => 'La contraseña debe contener al menos un número y un carácter especial y tener mínimo 8 caracteres.']);
@@ -46,14 +46,11 @@ if(mysqli_stmt_num_rows($stmt) > 0){
 }
 mysqli_stmt_close($stmt);
 
-// hashear la contraseña (no insertamos aún en usuarios)
 $hashed = password_hash($contrasena, PASSWORD_DEFAULT);
 
-// generar código numérico de 6 dígitos
 $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 $expires = (new DateTime('+1 hour'))->format('Y-m-d H:i:s');
 
-// insertar en tabla verificaciones
 $insert = mysqli_prepare($conn, "INSERT INTO verificaciones (Nombre, Correo, ContrasenaHash, Codigo, ExpiresAt) VALUES (?, ?, ?, ?, ?)");
 if (!$insert) {
     echo json_encode(['success' => false, 'message' => 'Error al preparar la verificación: ' . mysqli_error($conn)]);
@@ -70,7 +67,6 @@ if (!mysqli_stmt_execute($insert)) {
 $verification_id = mysqli_insert_id($conn);
 mysqli_stmt_close($insert);
 
-// enviar correo con codigo
 $sent = sendVerificationEmail($correo, $nombre, $code);
 if (!$sent) {
     // eliminar la fila si no se envio el correo
@@ -82,7 +78,7 @@ if (!$sent) {
 }
 
 mysqli_close($conn);
-// Respondemos indicando que el frontend debe pedir el codigo (se incluye el id de verificacion)
+// Respondemos indicando que el frontend debe pedir el codigo
 echo json_encode([
     'success' => true,
     'action' => 'verify',

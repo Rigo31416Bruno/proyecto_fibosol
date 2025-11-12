@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../styles/olvidar_contraseña.css"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* mínimo para que .hidden funcione si no está en el CSS */
         .hidden { display: none !important; }
         .inline-code { margin-top: 12px; display:flex; gap:8px; align-items:center; }
         .inline-code input { padding:8px; border-radius:6px; border:1px solid #d7dbe8; }
@@ -19,7 +18,6 @@
     <div class="card" role="main">
         <h2>Reestablecer contraseña</h2>
 
-        <!-- Paso 1: ingresar correo -->
         <form id="emailForm">
             <div id="step-email">
                 <label for="email">Correo electrónico</label>
@@ -29,14 +27,12 @@
                     <button id="cancelBtn" class="secondary" type="button">Cancelar</button>
                 </div>
 
-                <!-- aqui aparecerá el input para poner el código inline -->
                 <div id="inlineCodeContainer" class="hidden"></div>
 
                 <div class="message" id="msg-email"></div>
             </div>
         </form>
 
-        <!-- Paso 2: ingresar código (mantengo el bloque por compatibilidad, no se mostrará) -->
         <form id="codeForm" class="hidden">
             <div id="step-code" class="hidden">
                 <label for="code">Ingresa el código</label>
@@ -54,10 +50,8 @@
             </div>
         </form>
 
-        <!-- Paso 3: nueva contraseña -->
         <form id="resetForm">
             <div id="step-reset" class="hidden">
-                <!-- hidden field to store verified code -->
                 <input type="hidden" id="code" name="code" value="">
                 <label for="newPassword">Nueva contraseña</label>
                 <input id="newPassword" name="password" type="password" placeholder="Nueva contraseña" />
@@ -118,17 +112,17 @@ document.addEventListener('DOMContentLoaded', function () {
             try {
                 const r = await postJson(endpointVerify, { email: currentEmail, code });
                 if (r && r.success) {
-                    // guardar el código verificado en el campo oculto y mostrar reset
+                    // guardar el codigo verificado en el campo oculto y mostrar reset
                     document.getElementById('code').value = code;
                     document.getElementById('step-reset').classList.remove('hidden');
                     document.getElementById('step-email').style.display = 'none';
-                    show('#msg-reset', 'Código válido. Ingresa tu nueva contraseña.', 'green');
+                    show('#msg-reset', 'Codigo valido. Ingresa tu nueva contraseña.', 'green');
                 } else {
                     show('#msg-email', (r && r.message) ? r.message : 'Código inválido');
                 }
             } catch (err) {
                 console.error('verify error', err);
-                show('#msg-email', 'Error de comunicación con el servidor');
+                show('#msg-email', 'Error de comunicacion con el servidor');
             }
         });
 
@@ -150,7 +144,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // enviar código
     document.getElementById('emailForm').addEventListener('submit', async function (e) {
         e.preventDefault();
         const email = document.getElementById('email').value.trim();
@@ -194,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // botones simples
     document.getElementById('cancelBtn').addEventListener('click', function () { location.href = 'inicio_de_sesion.html'; });
     document.getElementById('cancel2Btn').addEventListener('click', function () { location.href = 'inicio_de_sesion.html'; });
 });

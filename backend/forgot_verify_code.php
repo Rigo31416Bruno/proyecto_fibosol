@@ -6,7 +6,7 @@ $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 $code  = isset($_POST['code'])  ? trim($_POST['code'])  : '';
 
 if ($email === '' || $code === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo json_encode(['success' => false, 'message' => 'Email y código requeridos o inválidos.']);
+    echo json_encode(['success' => false, 'message' => 'Email y codigo requeridos o invalidos.']);
     exit;
 }
 
@@ -23,24 +23,23 @@ $row = mysqli_fetch_assoc($res);
 mysqli_stmt_close($stmt);
 
 if (!$row) {
-    echo json_encode(['success' => false, 'message' => 'Código inválido o no existe.']);
+    echo json_encode(['success' => false, 'message' => 'Codigo invalido o no existe.']);
     mysqli_close($conn);
     exit;
 }
 
-// comprobar expiración
 $expires = new DateTime($row['ExpiresAt']);
 $now = new DateTime();
 if ($expires < $now) {
     // borrar registro expirado
     $del = mysqli_prepare($conn, "DELETE FROM recuperaciones WHERE ID = ?");
     if ($del) { mysqli_stmt_bind_param($del, "i", $row['ID']); mysqli_stmt_execute($del); mysqli_stmt_close($del); }
-    echo json_encode(['success' => false, 'message' => 'El código ha expirado. Solicita uno nuevo.']);
+    echo json_encode(['success' => false, 'message' => 'El codigo ha expirado. Solicita uno nuevo.']);
     mysqli_close($conn);
     exit;
 }
 
-echo json_encode(['success' => true, 'message' => 'Código válido.']);
+echo json_encode(['success' => true, 'message' => 'Codigo valido.']);
 mysqli_close($conn);
 exit;
 ?>
