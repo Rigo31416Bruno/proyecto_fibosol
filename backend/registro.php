@@ -70,10 +70,10 @@ if (!mysqli_stmt_execute($insert)) {
 $verification_id = mysqli_insert_id($conn);
 mysqli_stmt_close($insert);
 
-// enviar correo con código
+// enviar correo con codigo
 $sent = sendVerificationEmail($correo, $nombre, $code);
 if (!$sent) {
-    // eliminar la fila si no se envió el correo
+    // eliminar la fila si no se envio el correo
     $del = mysqli_prepare($conn, "DELETE FROM verificaciones WHERE ID = ?");
     if ($del) { mysqli_stmt_bind_param($del, "i", $verification_id); mysqli_stmt_execute($del); mysqli_stmt_close($del); }
     mysqli_close($conn);
@@ -82,12 +82,12 @@ if (!$sent) {
 }
 
 mysqli_close($conn);
-// Respondemos indicando que el frontend debe pedir el código (se incluye el id de verificación)
+// Respondemos indicando que el frontend debe pedir el codigo (se incluye el id de verificacion)
 echo json_encode([
     'success' => true,
     'action' => 'verify',
     'verification_id' => (int)$verification_id,
-    'message' => 'Se envió un código de verificación al correo. Ingresa el código para completar el registro.'
+    'message' => 'Se envio un código de verificación al correo. Ingresa el código para completar el registro.'
 ], JSON_UNESCAPED_UNICODE);
 exit();
 ?>

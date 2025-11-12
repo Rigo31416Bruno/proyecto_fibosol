@@ -1,66 +1,39 @@
 <?php
+// Carga autoload buscando en rutas habituales
 require('../vendor/autoload.php');
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-/*if (class_exists(\Dotenv\Dotenv::class)) {
-    \Dotenv\Dotenv::createImmutable(__DIR__ . '/..')->safeLoad();
-}
-
-function env(string $key, $default = null){
-    if (array_key_exists($key, $_ENV) && $_ENV[$key] !== '') return trim((string) $_ENV[$key]);
-    if (array_key_exists($key, $_SERVER) && $_SERVER[$key] !== '') return trim((string) $_SERVER[$key]);
-    $v = getenv($key);
-    return $v === false ? $default : trim((string) $v);
-}*/
-
-/**
- * Envia un correo con el código de verificación (sin URL).
- * Retorna true si se envió correctamente, false en otro caso.
- */
 function sendVerificationEmail(string $toEmail, string $toName, string $code): bool {
-    $smtpHost   = 'smtp.gmail.com';
-    $smtpUser   = 'reestablecercontrasena99@gmail.com';
-    $smtpPass   = 'eazoyravaqeacxcs';
-    $smtpPort   = 587;
-    $smtpSecure = 'tls';
-    $mailFrom   = 'reestablecercontrasena99@gmail.com';
-    $mailFromName = 'Verifiacar';
-
     $mail = new PHPMailer(true);
     try {
+        // SMTP config (ajusta credenciales o lee desde env)
         $mail->isSMTP();
         $mail->SMTPDebug = 0;
-        $mail->Host = $smtpHost;
+        $mail->Host = 'smtp.gmail.com';
         $mail->SMTPAuth = true;
-        $mail->Username = $smtpUser;
-        $mail->Password = $smtpPass;
-        $mail->Port = $smtpPort;
-        if ($smtpSecure === 'ssl') $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
-        elseif ($smtpSecure === 'tls') $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Username = 'reestablecercontrasena99@gmail.com';
+        $mail->Password = 'eazoyravaqeacxcs';
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+        $mail->Port = 587;
 
-        $mail->setFrom($mailFrom, $mailFromName);
+        $mail->setFrom('reestablecercontrasena99@gmail.com', 'Soporte');
         $mail->addAddress($toEmail, $toName);
-
         $mail->isHTML(true);
-        $mail->Subject = 'Codigo de verificacion';
+        $mail->Subject = 'Código recuperación de contraseña';
         $mail->Body = "
-            <div style='font-family: Arial, Helvetica, sans-serif; color:#111;'>
-              <h3>Hola " . htmlspecialchars($toName) . "</h3>
-              <p>Tu código de verificación es:</p>
-              <div style='font-size:1.6rem; font-weight:700; background:#f3f4f6; padding:10px 14px; display:inline-block; border-radius:6px; letter-spacing:4px;'>
-                " . htmlspecialchars($code) . "
-              </div>
-              <p>Este codigo expira en 1 hora. Si no solicitaste este codigo, ignora este correo.</p>
-            </div>
-        ";
-        $mail->AltBody = "Tu codigo de verificacion: " . $code;
+          <div style='font-family:Arial,Helvetica,sans-serif;color:#111;'>
+            <h3>Hola " . htmlspecialchars($toName) . "</h3>
+            <p>Tu código para reestablecer la contraseña es:</p>
+            <div style='font-size:1.4rem;font-weight:700;padding:10px;background:#f3f4f6;display:inline-block;border-radius:6px;letter-spacing:3px;'>" . htmlspecialchars($code) . "</div>
+            <p>Expira en 1 hora. Si no solicitaste esto, ignora este correo.</p>
+          </div>";
+        $mail->AltBody = "Tu código de recuperación: $code";
 
-        $mail->send();
-        return true;
+        return (bool) $mail->send();
     } catch (Exception $e) {
-        error_log('Mail error: ' . $mail->ErrorInfo);
+        error_log('sendVerificationEmail error: ' . $e->getMessage());
         return false;
     }
 }

@@ -10,7 +10,7 @@ if ($verification_id <= 0 || $code === '') {
     exit();
 }
 
-// buscar verificación
+// buscar verificacion
 $stmt = mysqli_prepare($conn, "SELECT ID, Nombre, Correo, ContrasenaHash, Codigo, ExpiresAt FROM verificaciones WHERE ID = ? LIMIT 1");
 if (!$stmt) { echo json_encode(['success'=>false,'message'=>'Error en consulta.']); exit(); }
 mysqli_stmt_bind_param($stmt, "i", $verification_id);
@@ -24,7 +24,7 @@ if (!$row) {
     exit();
 }
 
-// comprobar expiración
+// comprobar fecha expiracion
 if (new DateTime($row['ExpiresAt']) < new DateTime()) {
     $del = mysqli_prepare($conn, "DELETE FROM verificaciones WHERE ID = ?");
     if ($del) { mysqli_stmt_bind_param($del, "i", $verification_id); mysqli_stmt_execute($del); mysqli_stmt_close($del); }
@@ -32,7 +32,6 @@ if (new DateTime($row['ExpiresAt']) < new DateTime()) {
     exit();
 }
 
-// comparar códigos (tiempo constante no crítico aquí, pero usamos hash_compare)
 if (!hash_equals($row['Codigo'], $code)) {
     echo json_encode(['success' => false, 'message' => 'Código incorrecto.']);
     exit();
