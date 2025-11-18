@@ -54,7 +54,7 @@ mysqli_stmt_close($chk);
 
 // insertar en usuarios
 $estatus = 'activo';
-$ins = mysqli_prepare($conn, "INSERT INTO usuarios (Nombre, Correo, `Contraseña`, Estatus) VALUES (?, ?, ?, ?)");
+$ins = mysqli_prepare($conn, "INSERT INTO usuarios (Nombre, Correo, `Contraseña`, Estatus, ID_Rol) VALUES (?, ?, ?, ?, 1)");
 if (!$ins) { echo json_encode(['success'=>false,'message'=>'Error al preparar inserción.']); exit(); }
 mysqli_stmt_bind_param($ins, "ssss", $row['Nombre'], $row['Correo'], $row['ContrasenaHash'], $estatus);
 if (!mysqli_stmt_execute($ins)) {
