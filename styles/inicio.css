@@ -120,6 +120,499 @@ body {
     transition: all 0.3s ease;
 }
 
+/* Added prominent search banner styles */
+
+/* Enhanced search banner styling with modern, premium design */
+/* Enhanced search banner styling with modern, premium design */
+/* Enhanced search banner styling with modern, premium design */
+/* Enhanced search banner styling with modern, premium design */
+/* Reorganized search banners with improved responsive grid layout */
+.search-banners {
+    background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 50%, #2a2520 100%);
+    padding: 2.5rem 2rem;
+    border-bottom: 3px solid var(--accent-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.search-banners::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(212, 165, 116, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.search-banners::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: -5%;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(212, 165, 116, 0.05) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.search-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.8rem;
+    position: relative;
+    z-index: 2;
+}
+
+/* Individual search banner styles */
+.search-banner {
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 12px;
+    padding: 1.8rem;
+    box-shadow: 0 8px 32px rgba(212, 165, 116, 0.2),
+                0 0 20px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border-left: 5px solid var(--accent-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.search-banner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, var(--accent-color), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.search-banner:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(212, 165, 116, 0.3),
+                0 0 30px rgba(0, 0, 0, 0.08);
+}
+
+.search-banner:hover::before {
+    opacity: 1;
+}
+
+.search-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.search-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin: 0;
+    letter-spacing: 0.3px;
+}
+
+.search-form {
+    width: 100%;
+    display: flex;
+    gap: 0;
+}
+
+/* Text search specific styles */
+.search-banner-text {
+    border-left-color: #d4a574;
+}
+
+.search-banner-text .search-title {
+    color: #1a1a1a;
+}
+
+/* Improved search input wrapper with better styling */
+.search-input-wrapper {
+    display: flex;
+    gap: 0;
+    align-items: stretch;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(212, 165, 116, 0.15);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--secondary-color);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    border: 2px solid transparent;
+}
+
+.search-input-wrapper:focus-within {
+    box-shadow: 0 10px 30px rgba(212, 165, 116, 0.25);
+    border-color: var(--accent-color);
+    transform: scale(1.02);
+}
+
+/* Enhanced search input styling with better typography */
+.search-input {
+    flex: 1;
+    padding: 1rem 1.2rem;
+    border: none;
+    font-size: 0.95rem;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    outline: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+}
+
+.search-input::placeholder {
+    color: #b0b0b0;
+    font-weight: 400;
+    letter-spacing: 0.2px;
+}
+
+.search-input:focus {
+    color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.98);
+}
+
+/* Redesigned search button with modern styling */
+.search-button {
+    padding: 0 1.8rem;
+    background: linear-gradient(135deg, var(--accent-color) 0%, #c89060 100%);
+    color: var(--primary-color);
+    border: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    position: relative;
+    overflow: hidden;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+}
+
+.search-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.15);
+    transition: left 0.4s ease;
+}
+
+.search-button:hover::before {
+    left: 100%;
+}
+
+.search-button:hover {
+    background: linear-gradient(135deg, #c89060 0%, #b8805a 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(212, 165, 116, 0.4);
+}
+
+.search-button:active {
+    transform: translateY(0px);
+    box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
+}
+
+/* Enhanced search hint with better styling */
+.search-hint {
+    color: #d0d0d0;
+    font-size: 0.95rem;
+    margin-top: 0.8rem;
+    letter-spacing: 0.3px;
+    animation: fadeInDown 0.6s ease-out 0.2s both;
+}
+
+/* Added animation for smooth appearance */
+@keyframes fadeInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Gender and Category filter specific styles */
+.search-banner-gender {
+    border-left-color: #6ba3d4;
+}
+
+.search-banner-gender .search-title {
+    color: #1a4d7a;
+}
+
+.search-banner-category {
+    border-left-color: #a96fb0;
+}
+
+.search-banner-category .search-title {
+    color: #5d3a6b;
+}
+
+.filter-wrapper {
+    display: flex;
+    width: 100%;
+}
+
+/* Agregados estilos para formulario de búsqueda avanzada con filtros */
+.search-form-advanced {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.filters-container {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: slideUp 0.5s ease-out 0.3s both;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.filter-group {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.filter-group label {
+    color: #e0e0e0;
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.3px;
+}
+
+.filter-select {
+    flex: 1;
+    padding: 0.95rem 1.2rem;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 2px solid var(--accent-color);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    font-weight: 500;
+    box-shadow: 0 4px 12px rgba(212, 165, 116, 0.1);
+}
+
+.filter-select:hover {
+    background-color: rgba(255, 255, 255, 0.98);
+    box-shadow: 0 6px 18px rgba(212, 165, 116, 0.2);
+    transform: translateY(-2px);
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: #b8805a;
+    box-shadow: 0 8px 25px rgba(212, 165, 116, 0.3);
+}
+
+.filter-select option {
+    padding: 0.5rem;
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+}
+
+.filter-gender,
+.filter-category {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+}
+
+.filter-large {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.filter-large:hover {
+    transform: translateY(-3px);
+}
+
+
+/* Estilos para la página de resultados de búsqueda */
+.search-results {
+    padding: 3rem 2rem;
+    background-color: #f8f8f8;
+    min-height: 60vh;
+}
+
+.results-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.results-header {
+    margin-bottom: 2.5rem;
+    text-align: center;
+}
+
+.results-header h2 {
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.no-results {
+    text-align: center;
+    padding: 4rem 2rem;
+    background-color: var(--secondary-color);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.no-results h2 {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.no-results p {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+/* Added modern styling for advanced search form with separate gender and category filters */
+.advanced-search-form {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.search-filters-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    align-items: flex-end;
+    animation: slideUp 0.5s ease-out 0.2s both;
+}
+
+
+/* Responsive para filtros en móviles */
+/* Improved responsive design for mobile devices */
+@media (max-width: 1024px) {
+    .search-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+
+    .search-banner-text {
+        grid-column: 1 / -1;
+    }
+
+    .search-input-wrapper {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 768px) {
+    .search-banners {
+        padding: 2rem 1.5rem;
+    }
+
+    .search-container {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .search-banner {
+        padding: 1.5rem;
+    }
+
+    .search-banner-text {
+        grid-column: 1;
+    }
+
+    .search-title {
+        font-size: 1rem;
+    }
+
+    .search-input {
+        padding: 0.9rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .search-button {
+        padding: 0 1.5rem;
+        font-size: 0.9rem;
+    }
+
+    .filter-select {
+        padding: 0.9rem 1rem;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .search-banners {
+        padding: 1.5rem 1rem;
+    }
+
+    .search-banner {
+        padding: 1.2rem;
+    }
+
+    .search-title {
+        font-size: 0.95rem;
+    }
+
+    .search-input-wrapper {
+        flex-direction: column;
+        border-radius: 6px;
+    }
+
+    .search-input {
+        padding: 0.85rem;
+        font-size: 0.85rem;
+        border-radius: 6px 6px 0 0;
+    }
+
+    .search-button {
+        width: 100%;
+        padding: 0.85rem;
+        font-size: 0.85rem;
+        border-radius: 0 0 6px 6px;
+    }
+
+    .filter-select {
+        padding: 0.85rem 0.9rem;
+        font-size: 0.85rem;
+    }
+}
+
+
+
+
+
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
@@ -461,6 +954,20 @@ body {
         font-size: 2rem;
     }
 
+    .search-banner {
+        padding: 2rem 1rem;
+    }
+
+    .search-input {
+        padding: 0.95rem 1rem;
+        font-size: 0.95rem;
+    }
+
+    .search-button {
+        padding: 0 1.5rem;
+        font-size: 0.9rem;
+    }
+
     .nav-links {
         display: none;
     }
@@ -503,6 +1010,29 @@ body {
         font-size: 1.5rem;
     }
 
+    .search-banner {
+        padding: 1.5rem 1rem;
+    }
+
+    .search-input-wrapper {
+        flex-direction: column;
+    }
+
+    .search-input {
+        padding: 1rem;
+        border-radius: 6px 6px 0 0;
+    }
+
+    .search-button {
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0 0 6px 6px;
+    }
+
+    .search-hint {
+        font-size: 0.85rem;
+    }
+
     .products-grid {
         grid-template-columns: 1fr;
     }
@@ -510,4 +1040,234 @@ body {
     .categories-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* Added Cart Sidebar Styles */
+.cart-icon {
+    position: relative;
+    cursor: pointer;
+    color: var(--secondary-color);
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.cart-icon:hover {
+    color: var(--accent-color);
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: -400px;
+    width: 400px;
+    height: 100vh;
+    background-color: var(--secondary-color);
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.2);
+    z-index: 1100; /* aumentado para que quede encima del navbar */
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-sidebar.active {
+    right: 0;
+}
+
+.cart-header {
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3rem;
+    font-weight: 600;
+}
+
+.close-cart {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.close-cart:hover {
+    color: var(--accent-color);
+}
+
+.cart-items {
+    flex: 1;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    background-color: var(--light-gray);
+    border-radius: 5px;
+    margin-bottom: 0.5rem;
+}
+
+.cart-item-info {
+    flex: 1;
+}
+
+.cart-item-name {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 0.3rem;
+}
+
+.cart-item-price {
+    color: var(--accent-color);
+    font-weight: 600;
+}
+
+.cart-item-quantity {
+    margin-left: 1rem;
+    color: #666;
+}
+
+.cart-remove {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0.5rem;
+    transition: color 0.3s ease;
+    margin-left: 0.5rem;
+}
+
+.cart-remove:hover {
+    color: var(--accent-color);
+}
+
+.empty-cart {
+    text-align: center;
+    padding: 2rem;
+    color: #999;
+}
+
+.cart-footer {
+    padding: 1.5rem;
+    border-top: 2px solid var(--border-color);
+    background-color: var(--light-gray);
+}
+
+.cart-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.btn-checkout {
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-checkout:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(212, 165, 116, 0.3);
+}
+
+.cart-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+}
+
+.cart-overlay.active {
+    display: block;
+}
+
+/* Added Logout Button Styles */
+.btn-logout {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    color: var(--secondary-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-logout:hover {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+}
+
+/* Sidebar actions (botones para gestionar direcciones y cerrar sesión) */
+.sidebar-actions {
+    padding: 1rem;
+    border-top: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+.sidebar-btn {
+    display: inline-block;
+    text-align: center;
+    padding: 0.65rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 700;
+    color: var(--secondary-color);
+    background: var(--primary-color);
+    transition: background 0.2s ease, transform 0.08s ease;
+}
+.sidebar-btn:hover {
+    background: #333; /* ligero efecto hover */
+    transform: translateY(-1px);
+}
+.sidebar-logout {
+    background: #b94a4a; /* rojo para destacar acción de salir */
+}
+.sidebar-logout:hover {
+    background: #9b3b3b;
+}
+/* pequeño ajuste responsive */
+@media (max-width: 480px) {
+    .sidebar-btn { font-size: 0.95rem; }
 }
