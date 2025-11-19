@@ -23,7 +23,7 @@ if(strlen($contrasena) < 4){
     exit();
 }
 
-// patrón: al menos un dígito y un carácter especial, mínimo 8 caracteres
+// patron: al menos un dígito y un carácter especial, mínimo 8 caracteres
 $patron = '/^(?=.*\d)(?=.*[^\w\s]).{8,}$/u';
 if (!preg_match($patron, $contrasena)) {
     echo json_encode(['success' => false, 'message' => 'La contraseña debe contener al menos un número y un carácter especial y tener mínimo 8 caracteres.']);

@@ -173,7 +173,7 @@ if (isset($conn) && $conn) {
         <?php endif; ?>
     </div>
 
-    <!-- Hero Section -->
+    
     <section class="hero" id="inicio">
         <div class="hero-content">
             <h1>Estilo que te define</h1>
@@ -187,7 +187,7 @@ if (isset($conn) && $conn) {
         </div>
     </section>
 
-    <!-- Categories Section -->
+    
     <section class="categories">
         <h2>Nuestras Categorías</h2>
         <div class="categories-grid">
@@ -209,7 +209,7 @@ if (isset($conn) && $conn) {
         </div>
     </section>
 
-    <!-- Camisas Section -->
+    
     <?php
     $camisas = [];
     if (isset($conn) && $conn) {
@@ -252,7 +252,7 @@ if (isset($conn) && $conn) {
         </div>
     </section>
 
-    <!-- Pantalones Section -->
+    
     <?php
     $pantalones = [];
     if (isset($conn) && $conn) {
@@ -295,7 +295,7 @@ if (isset($conn) && $conn) {
         </div>
     </section>
 
-    <!-- Tenis Section -->
+    
     <section class="products-section" id="tenis">
         <h2>Tenis</h2>
         <div class="products-grid">
@@ -336,7 +336,7 @@ if (isset($conn) && $conn) {
         </div>
     </section>
 
-    <!-- Newsletter Section -->
+    
     <section class="newsletter">
         <div class="newsletter-content">
             <h2>Suscríbete a nuestro newsletter</h2>
@@ -348,7 +348,7 @@ if (isset($conn) && $conn) {
         </div>
     </section>
 
-    <!-- Footer Section -->
+    
     <footer class="footer" id="contacto">
         <div class="footer-content">
             <div class="footer-section">
@@ -382,7 +382,7 @@ if (isset($conn) && $conn) {
         </div>
     </footer>
 
-    <!-- JavaScript for Cart Toggle -->
+    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const cartToggle = document.getElementById('cartToggle');

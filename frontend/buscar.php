@@ -2,7 +2,6 @@
 include '../backend/validarSesion.php';
 require('../db/conexion.php');
 
-// Obtener parámetros de búsqueda
 $query = isset($_GET['q']) ? trim($_GET['q']) : '';
 $sexo = isset($_GET['sexo']) ? (int)$_GET['sexo'] : 0;
 $categoria = isset($_GET['categoria']) ? (int)$_GET['categoria'] : 0;
@@ -11,7 +10,7 @@ $productos = [];
 $categorias_principales = [];
 $categorias_filtradas = [];
 
-// Obtener categorías principales (Hombre y Mujer)
+// categorías principales (Hombre y Mujer)
 if (isset($conn) && $conn) {
     $sql_principales = "SELECT id_categoria, nombre FROM categorias WHERE ParentID IS NULL ORDER BY id_categoria";
     $res = mysqli_query($conn, $sql_principales);
@@ -22,7 +21,7 @@ if (isset($conn) && $conn) {
         mysqli_free_result($res);
     }
 
-    // Si se selecciona un sexo, obtener sus subcategorías
+    // Si se selecciona un sexo obtener sus subcategorías
     if ($sexo > 0) {
         $sql_sub = "SELECT id_categoria, nombre FROM categorias WHERE ParentID = " . (int)$sexo . " ORDER BY nombre";
         $res = mysqli_query($conn, $sql_sub);
@@ -34,7 +33,6 @@ if (isset($conn) && $conn) {
         }
     }
 
-    // Construir query de búsqueda
     $sql = "SELECT id_producto, nombre, precio, imagen FROM productos WHERE 1=1";
     
     if (!empty($query)) {
@@ -65,7 +63,7 @@ if (isset($conn) && $conn) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados de Búsqueda - Shopware</title>
+    <title>Resultados de Busqueda - Shopware</title>
     <link rel="stylesheet" href="../styles/inicio.css">
 </head>
 <body>
@@ -135,7 +133,6 @@ if (isset($conn) && $conn) {
         <?php endif; ?>
     </div>
 
-    <!-- RESULTADOS -->
     <section class="search-results">
         <div class="results-container">
             <?php if (!empty($productos)): ?>

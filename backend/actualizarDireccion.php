@@ -1,5 +1,5 @@
 <?php
-// Asegurar sesión antes de cualquier include que la use
+
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -7,14 +7,12 @@ if (session_status() === PHP_SESSION_NONE) {
 include 'validarSesion.php';
 require('../db/conexion.php');
 
-// Validar que el usuario esté autenticado
 if (!function_exists('validarSesion') || !validarSesion()) {
     http_response_code(401);
     echo "Usuario no autenticado";
     exit();
 }
 
-// Solo POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
     echo "Método no permitido";
@@ -27,7 +25,6 @@ if (empty($_POST['direccion'])) {
     exit();
 }
 
-// Intentar obtener ID_Usuario desde varias claves comunes en $_SESSION
 $possibleKeys = ['ID_Usuario','id_usuario','user_id','ID','id','usuario_id'];
 $ID_Usuario = null;
 foreach ($possibleKeys as $k) {
@@ -37,7 +34,6 @@ foreach ($possibleKeys as $k) {
     }
 }
 
-// Si no hay id en sesión, intentar resolver por email/nombre almacenado en sesión
 if (empty($ID_Usuario)) {
     if (!empty($_SESSION['email']) || !empty($_SESSION['correo']) || !empty($_SESSION['nombre'])) {
         $email = $_SESSION['email'] ?? $_SESSION['correo'] ?? null;
@@ -71,13 +67,12 @@ if (empty($ID_Usuario)) {
 
 if (empty($ID_Usuario)) {
     http_response_code(401);
-    echo "Usuario no autenticado (ID no encontrado en sesión)";
+    echo "Usuario no autenticado (ID no encontrado en sesion)";
     exit();
 }
 
 $direccion = trim($_POST['direccion']);
 
-// Prepared statement para actualizar
 $stmt = mysqli_prepare($conn, "UPDATE usuarios SET Direccion = ? WHERE ID_Usuario = ?");
 if (!$stmt) {
     http_response_code(500);
