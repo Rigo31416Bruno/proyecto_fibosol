@@ -33,7 +33,7 @@ $row = mysqli_fetch_assoc($res);
 mysqli_stmt_close($stmt);
 
 if (!$row) {
-    echo json_encode(['success' => false, 'message' => 'Codigo inválido.']);
+    echo json_encode(['success' => false, 'message' => 'Codigo invalido.']);
     mysqli_close($conn);
     exit;
 }
@@ -53,7 +53,7 @@ $hash = password_hash($pass, PASSWORD_DEFAULT);
 
 $upd = mysqli_prepare($conn, "UPDATE usuarios SET `Contraseña` = ? WHERE Correo = ? LIMIT 1");
 if (!$upd) {
-    echo json_encode(['success' => false, 'message' => 'Error al preparar actualización.']);
+    echo json_encode(['success' => false, 'message' => 'Error al preparar actualizacion.']);
     mysqli_close($conn);
     exit;
 }

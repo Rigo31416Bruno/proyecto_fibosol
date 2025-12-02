@@ -64,7 +64,6 @@
                             $('#mensaje').text(response.message);
                             if (response.success) {
                                 $('#mensaje').css('color','green');
-                                // Redirigir despues de 2 segundos si el login fue correcto
                                 setTimeout(function() {
                                     window.location.href = 'inicio.php';
                             }, 2000);

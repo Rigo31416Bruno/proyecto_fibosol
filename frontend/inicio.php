@@ -31,6 +31,7 @@ if (isset($conn) && $conn) {
         mysqli_free_result($res);
     }
 }
+ 
 ?>
 
 <!DOCTYPE html>
@@ -59,8 +60,8 @@ if (isset($conn) && $conn) {
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
             <div class="auth-buttons">
-                <a href="login.html" class="btn-login">Inicia Sesión</a>
-                <a href="registro.html" class="btn-register">Regístrate</a>
+                <a href="inicio_de_sesion.html" class="btn-login">Inicia Sesión</a>
+                <a href="registro.php" class="btn-register">Regístrate</a>
             </div>
             <button id="cartToggle" class="cart-icon" aria-label="Abrir carrito">
                 🛒 <span class="cart-count" id="cartCount">0</span>
@@ -68,10 +69,9 @@ if (isset($conn) && $conn) {
         </div>
     </nav>
 
-    <!-- Enhanced search banner with separate gender and category filters -->
     <section class="search-banners">
         <div class="search-container">
-            <!-- SEARCH 1: Text Search -->
+
             <div class="search-banner search-banner-text">
                 <div class="search-content">
                     <h3 class="search-title">Buscar por Nombre</h3>
@@ -92,7 +92,6 @@ if (isset($conn) && $conn) {
                 </div>
             </div>
 
-            <!-- SEARCH 2: Gender Search -->
             <div class="search-banner search-banner-gender">
                 <div class="search-content">
                     <h3 class="search-title">Filtrar por Sexo</h3>
@@ -111,7 +110,6 @@ if (isset($conn) && $conn) {
                 </div>
             </div>
 
-            <!-- SEARCH 3: Category Search -->
             <div class="search-banner search-banner-category">
                 <div class="search-content">
                     <h3 class="search-title">Filtrar por Categoría</h3>
@@ -132,7 +130,7 @@ if (isset($conn) && $conn) {
         </div>
     </section>
 
-    <!-- Cart Sidebar -->
+
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
@@ -140,37 +138,15 @@ if (isset($conn) && $conn) {
             <button class="close-cart" id="closeCart">&times;</button>
         </div>
         <div class="cart-items" id="cartItems">
-            <?php if (empty($carrito)): ?>
                 <div class="empty-cart">
-                    <p>Tu carrito está vacío</p>
+                    <p>Ve a tu carrito para ver los productos añadidos.</p>
                 </div>
-            <?php else: ?>
-                <?php foreach ($carrito as $item): ?>
-                    <?php $total_carrito += $item['precio'] * $item['cantidad']; ?>
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <div class="cart-item-name"><?php echo htmlspecialchars($item['nombre'], ENT_QUOTES); ?></div>
-                            <div class="cart-item-price">$<?php echo number_format((float)$item['precio'], 2); ?></div>
-                        </div>
-                        <div class="cart-item-quantity">x<?php echo (int)$item['cantidad']; ?></div>
-                        <button class="cart-remove" data-id="<?php echo (int)$item['id_producto']; ?>" title="Eliminar">&times;</button>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
         </div>
         <div class="sidebar-actions">
+            <a href="carrito.php" class="btn-primary">Ir al Carrito</a>
             <a href="direccion.php" class="sidebar-btn">Gestionar Direcciones</a>
-            <a href="../backend/cerrarSesion.php" class="sidebar-btn sidebar-logout">Cerrar Sesión</a>
+            <button class="sidebar-btn sidebar-logout" onclick="openLogoutModal()">Cerrar Sesión</button>
         </div>
-        <?php if (!empty($carrito)): ?>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <span>$<?php echo number_format($total_carrito, 2); ?></span>
-                </div>
-                <button class="btn-checkout">Proceder al Pago</button>
-            </div>
-        <?php endif; ?>
     </div>
 
     
@@ -191,9 +167,9 @@ if (isset($conn) && $conn) {
     <section class="categories">
         <h2>Nuestras Categorías</h2>
         <div class="categories-grid">
-            <div class="category-card" onclick="document.getElementById('camisas').scrollIntoView({behavior: 'smooth'})">
-                <img src="/placeholder.svg?height=300&width=300" alt="Camisas">
-                <h3>Camisas</h3>
+            <div class="category-card" onclick="document.getElementById('playeras').scrollIntoView({behavior: 'smooth'})">
+                <img src="../img/playera_estampado_ciudad.jpg" alt="Playeras">
+                <h3>Playeras</h3>
                 <p>Cómodas y versátiles</p>
             </div>
             <div class="category-card" onclick="document.getElementById('pantalones').scrollIntoView({behavior: 'smooth'})">
@@ -243,7 +219,7 @@ if (isset($conn) && $conn) {
                         </div>
                         <h3><?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES); ?></h3>
                         <p class="price"><?php echo isset($producto['precio']) ? '$' . number_format((float)$producto['precio'], 2) : 'Precio no disponible'; ?></p>
-                        <a href="../backend/agregarCarrito.php?id_producto=<?php echo (int)$producto['id_producto']; ?>" class="btn-add-cart" role="button">Agregar al Carrito</a>
+                        <a href="agregarCarrito.php?id=<?php echo (int)$producto['id_producto']; ?>" class="btn-add-cart" role="button">Agregar al Carrito</a>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -286,7 +262,7 @@ if (isset($conn) && $conn) {
                         </div>
                         <h3><?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES); ?></h3>
                         <p class="price"><?php echo isset($producto['precio']) ? '$' . number_format((float)$producto['precio'], 2) : 'Precio no disponible'; ?></p>
-                        <a href="../backend/agregarCarrito.php?id_producto=<?php echo (int)$producto['id_producto']; ?>" class="btn-add-cart" role="button">Agregar al Carrito</a>
+                        <a href="agregarCarrito.php?id=<?php echo (int)$producto['id_producto']; ?>" class="btn-add-cart" role="button">Agregar al Carrito</a>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>
@@ -296,43 +272,45 @@ if (isset($conn) && $conn) {
     </section>
 
     
-    <section class="products-section" id="tenis">
-        <h2>Tenis</h2>
+    <?php
+    $blusas = [];
+    if (isset($conn) && $conn) {
+        $sql = "SELECT id_producto, nombre, precio, imagen FROM productos WHERE categoria = 12 LIMIT 4";
+        $res = mysqli_query($conn, $sql);
+        if ($res && mysqli_num_rows($res) > 0) {
+            while ($row = mysqli_fetch_assoc($res)) {
+                $blusas[] = $row;
+            }
+            mysqli_free_result($res);
+        } else {
+            $res2 = mysqli_query($conn, "SELECT id_producto, nombre, precio, imagen FROM productos ORDER BY id_producto LIMIT 4");
+            if ($res2) {
+                while ($row = mysqli_fetch_assoc($res2)) {
+                    $blusas[] = $row;
+                }
+                mysqli_free_result($res2);
+            }
+        }
+    }
+    ?>
+    <section class="products-section" id="blusas">
+        <h2>Blusas</h2>
         <div class="products-grid">
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="/placeholder.svg?height=280&width=280" alt="Tenis Blanco">
-                    <span class="badge">Bestseller</span>
-                </div>
-                <h3>Tenis Blanco Deportivo</h3>
-                <p class="price">$89.99</p>
-                <button class="btn-add-cart">Agregar al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="/placeholder.svg?height=280&width=280" alt="Tenis Negro">
-                </div>
-                <h3>Tenis Negro Corrida</h3>
-                <p class="price">$94.99</p>
-                <button class="btn-add-cart">Agregar al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="/placeholder.svg?height=280&width=280" alt="Tenis Gris">
-                    <span class="badge">-10%</span>
-                </div>
-                <h3>Tenis Gris Casual</h3>
-                <p class="price"><span class="original-price">$79.99</span> $71.99</p>
-                <button class="btn-add-cart">Agregar al Carrito</button>
-            </div>
-            <div class="product-card">
-                <div class="product-image">
-                    <img src="/placeholder.svg?height=280&width=280" alt="Tenis Rojo">
-                </div>
-                <h3>Tenis Rojo Moderno</h3>
-                <p class="price">$85.99</p>
-                <button class="btn-add-cart">Agregar al Carrito</button>
-            </div>
+            <?php if (!empty($blusas)): ?>
+                <?php foreach ($blusas as $producto): ?>
+                    <div class="product-card">
+                        <div class="product-image">
+                            <?php $img = !empty($producto['imagen']) ? $producto['imagen'] : '/placeholder.svg?height=280&width=280'; ?>
+                            <img src="<?php echo htmlspecialchars($img, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES); ?>">
+                        </div>
+                        <h3><?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES); ?></h3>
+                        <p class="price"><?php echo isset($producto['precio']) ? '$' . number_format((float)$producto['precio'], 2) : 'Precio no disponible'; ?></p>
+                        <a href="agregarCarrito.php?id=<?php echo (int)$producto['id_producto']; ?>" class="btn-add-cart" role="button">Agregar al Carrito</a>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No hay productos disponibles.</p>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -382,27 +360,26 @@ if (isset($conn) && $conn) {
         </div>
     </footer>
 
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const cartToggle = document.getElementById('cartToggle');
-            const cartSidebar = document.getElementById('cartSidebar');
-            const cartOverlay = document.getElementById('cartOverlay');
-            const closeCart = document.getElementById('closeCart');
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJ+Y2h5Yx2a5g1QZbM4Q5c5Y5Q5Y5Q5Y5Q5Y=" crossorigin="anonymous"></script>
+    <script src="../js/sidebar_funcionalidad.js"></script>
+    <script src="../js/modalCerrarSesion.js"></script>
 
-            function openCart() {
-                cartSidebar.classList.add('active');
-                cartOverlay.classList.add('active');
-            }
-            function closeCartFn() {
-                cartSidebar.classList.remove('active');
-                cartOverlay.classList.remove('active');
-            }
+<div id="logoutModal" class="logout-modal">
+    <div class="logout-modal-content">
+        <div class="logout-modal-header">
+            <h2>¿Cerrar sesión?</h2>
+        </div>
+        <div class="logout-modal-body">
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+        </div>
+        <div class="logout-modal-footer">
+            <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancelar</button>
+            <form method="POST" action="../backend/cerrarSesion.php" style="display: inline;">
+                <button type="submit" name="logout" class="logout-btn-confirm">Confirmar Salida</button>
+            </form>
+        </div>
+    </div>
+</div>
 
-            if (cartToggle) cartToggle.addEventListener('click', openCart);
-            if (closeCart) closeCart.addEventListener('click', closeCartFn);
-            if (cartOverlay) cartOverlay.addEventListener('click', closeCartFn);
-        });
-    </script>
 </body>
 </html>

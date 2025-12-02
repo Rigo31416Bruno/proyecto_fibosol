@@ -10,7 +10,7 @@ $productos = [];
 $categorias_principales = [];
 $categorias_filtradas = [];
 
-// categorías principales (Hombre y Mujer)
+// Hombre y Mujer
 if (isset($conn) && $conn) {
     $sql_principales = "SELECT id_categoria, nombre FROM categorias WHERE ParentID IS NULL ORDER BY id_categoria";
     $res = mysqli_query($conn, $sql_principales);
@@ -93,6 +93,7 @@ if (isset($conn) && $conn) {
         </div>
     </nav>
 
+    
     <div class="cart-overlay" id="cartOverlay"></div>
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header">
@@ -100,37 +101,15 @@ if (isset($conn) && $conn) {
             <button class="close-cart" id="closeCart">&times;</button>
         </div>
         <div class="cart-items" id="cartItems">
-            <?php if (empty($carrito)): ?>
                 <div class="empty-cart">
-                    <p>Tu carrito está vacío</p>
+                    <p>Ve a tu carrito para ver los productos añadidos.</p>
                 </div>
-            <?php else: ?>
-                <?php foreach ($carrito as $item): ?>
-                    <?php $total_carrito += $item['precio'] * $item['cantidad']; ?>
-                    <div class="cart-item">
-                        <div class="cart-item-info">
-                            <div class="cart-item-name"><?php echo htmlspecialchars($item['nombre'], ENT_QUOTES); ?></div>
-                            <div class="cart-item-price">$<?php echo number_format((float)$item['precio'], 2); ?></div>
-                        </div>
-                        <div class="cart-item-quantity">x<?php echo (int)$item['cantidad']; ?></div>
-                        <button class="cart-remove" data-id="<?php echo (int)$item['id_producto']; ?>" title="Eliminar">&times;</button>
-                    </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
         </div>
         <div class="sidebar-actions">
+            <a href="carrito.php" class="btn-primary">Ir al Carrito</a>
             <a href="direccion.php" class="sidebar-btn">Gestionar Direcciones</a>
             <a href="../backend/cerrarSesion.php" class="sidebar-btn sidebar-logout">Cerrar Sesión</a>
         </div>
-        <?php if (!empty($carrito)): ?>
-            <div class="cart-footer">
-                <div class="cart-total">
-                    <span>Total:</span>
-                    <span>$<?php echo number_format($total_carrito, 2); ?></span>
-                </div>
-                <button class="btn-checkout">Proceder al Pago</button>
-            </div>
-        <?php endif; ?>
     </div>
 
     <section class="search-results">
@@ -148,7 +127,7 @@ if (isset($conn) && $conn) {
                             </div>
                             <h3><?php echo htmlspecialchars($producto['nombre'], ENT_QUOTES); ?></h3>
                             <p class="price">$<?php echo number_format((float)$producto['precio'], 2); ?></p>
-                            <a href="../backend/agregarCarrito.php?id_producto=<?php echo (int)$producto['id_producto']; ?>" class="btn-add-cart" role="button">Agregar al Carrito</a>
+                            <a href="agregarCarrito.php?id=<?php echo (int)$producto['id_producto']; ?>" class="btn-add-cart" role="button">Agregar al Carrito</a>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -186,27 +165,7 @@ if (isset($conn) && $conn) {
         </div>
     </footer>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const cartToggle = document.getElementById('cartToggle');
-            const cartSidebar = document.getElementById('cartSidebar');
-            const cartOverlay = document.getElementById('cartOverlay');
-            const closeCart = document.getElementById('closeCart');
-
-            function openCart() {
-                cartSidebar.classList.add('active');
-                cartOverlay.classList.add('active');
-            }
-            function closeCartFn() {
-                cartSidebar.classList.remove('active');
-                cartOverlay.classList.remove('active');
-            }
-
-            if (cartToggle) cartToggle.addEventListener('click', openCart);
-            if (closeCart) closeCart.addEventListener('click', closeCartFn);
-            if (cartOverlay) cartOverlay.addEventListener('click', closeCartFn);
-        });
-    </script>
+    <script src="../js/sidebar_funcionalidad.js"></script>
 
 </body>
 </html>

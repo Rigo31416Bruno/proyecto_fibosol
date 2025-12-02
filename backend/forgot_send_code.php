@@ -23,12 +23,11 @@ $user = mysqli_fetch_assoc($res);
 mysqli_stmt_close($st);
 
 if (!$user) {
-    echo json_encode(['success' => false, 'message' => 'No se encontró cuenta con ese correo.']);
+    echo json_encode(['success' => false, 'message' => 'No se encontro cuenta con ese correo.']);
     mysqli_close($conn);
     exit;
 }
 
-// eliminar codigos antiguos para ese correo
 $del = mysqli_prepare($conn, "DELETE FROM recuperaciones WHERE Correo = ?");
 if ($del) { mysqli_stmt_bind_param($del, "s", $email); mysqli_stmt_execute($del); mysqli_stmt_close($del); }
 

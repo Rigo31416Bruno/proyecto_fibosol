@@ -24,7 +24,6 @@ if (!$row) {
     exit();
 }
 
-// comprobar fecha expiracion
 if (new DateTime($row['ExpiresAt']) < new DateTime()) {
     $del = mysqli_prepare($conn, "DELETE FROM verificaciones WHERE ID = ?");
     if ($del) { mysqli_stmt_bind_param($del, "i", $verification_id); mysqli_stmt_execute($del); mysqli_stmt_close($del); }
@@ -37,7 +36,6 @@ if (!hash_equals($row['Codigo'], $code)) {
     exit();
 }
 
-// doble chequeo de correo en usuarios
 $chk = mysqli_prepare($conn, "SELECT 1 FROM usuarios WHERE Correo = ? LIMIT 1");
 if (!$chk) { echo json_encode(['success'=>false,'message'=>'Error en verificación.']); exit(); }
 mysqli_stmt_bind_param($chk, "s", $row['Correo']);
@@ -52,7 +50,6 @@ if (mysqli_stmt_num_rows($chk) > 0) {
 }
 mysqli_stmt_close($chk);
 
-// insertar en usuarios
 $estatus = 'activo';
 $ins = mysqli_prepare($conn, "INSERT INTO usuarios (Nombre, Correo, `Contraseña`, Estatus, ID_Rol) VALUES (?, ?, ?, ?, 1)");
 if (!$ins) { echo json_encode(['success'=>false,'message'=>'Error al preparar inserción.']); exit(); }
@@ -65,7 +62,7 @@ if (!mysqli_stmt_execute($ins)) {
 }
 mysqli_stmt_close($ins);
 
-// eliminar verificación
+// eliminar verificacion
 $del = mysqli_prepare($conn, "DELETE FROM verificaciones WHERE ID = ?");
 if ($del) { mysqli_stmt_bind_param($del, "i", $verification_id); mysqli_stmt_execute($del); mysqli_stmt_close($del); }
 

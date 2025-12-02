@@ -25,7 +25,7 @@ if(!validarSesion())
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </head>
 <body>
-    <!-- Added header navigation -->
+    
     <nav class="navbar">
         <div class="navbar-container">
             <a href="inicio.php" class="navbar-brand">Tienda</a>
@@ -37,7 +37,7 @@ if(!validarSesion())
 
     <form id="formularioDireccion">
         <div class="container-form">
-            <!-- Updated header styling -->
+            
             <div class="header-section">
                 <h1>Cambiar Dirección</h1>
                 <p class="instructions">Selecciona tu ubicación en el mapa o ingresa manualmente tu dirección.</p>
@@ -49,7 +49,7 @@ if(!validarSesion())
                     <input type="text" name="direccion" id="direccion" placeholder="Ingrese su dirección" class="direccion-input" required>
                 </div>
 
-                <!-- Updated map container styling -->
+                
                 <div class="map-wrapper">
                     <div id="map"></div>
                 </div>
@@ -59,7 +59,7 @@ if(!validarSesion())
         </div>
     </form>
 
-    <!-- Updated modal styling -->
+    
     <div class="modal fade" id="modalResultado" tabindex="-1" aria-labelledby="modalResultadoLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content modal-custom">
@@ -68,7 +68,7 @@ if(!validarSesion())
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body modal-body-custom" id="modalMensaje">
-                    <!-- Mensaje dinámico -->
+                    
                 </div>
                 <div class="modal-footer modal-footer-custom">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
@@ -82,24 +82,21 @@ if(!validarSesion())
 <script>
     const culiacanCoordinates = { lat: 24.8074, lng: -107.3940 };
 
-    // Configuración del mapa
+    
     const map = L.map('map').setView([culiacanCoordinates.lat, culiacanCoordinates.lng], 13);
     map.scrollWheelZoom.disable();
     map.on('focus', function () { map.scrollWheelZoom.enable(); });
     map.on('blur', function () { map.scrollWheelZoom.disable(); });
 
-    // Cargar tiles de OpenStreetMap
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Agregar marcador inicial
     const marker = L.marker([culiacanCoordinates.lat, culiacanCoordinates.lng], { draggable: true }).addTo(map)
         .bindPopup('Ubicación inicial: Culiacán, Sinaloa')
         .openPopup();
 
-    // Función para realizar geocodificación inversa
     function reverseGeocode(lat, lng) {
         const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`;
         fetch(url)
@@ -117,14 +114,12 @@ if(!validarSesion())
             });
     }
 
-    // Actualizar dirección al mover el marcador
     marker.on('dragend', function (event) {
         const position = marker.getLatLng();
         map.setView(position);
         reverseGeocode(position.lat, position.lng);
     });
-
-    // Actualizar dirección al hacer clic en el mapa
+    
     map.on('click', function (event) {
         const { lat, lng } = event.latlng;
         marker.setLatLng([lat, lng]);
@@ -132,9 +127,8 @@ if(!validarSesion())
         reverseGeocode(lat, lng);
     });
 
-    // Manejar el envío del formulario
     $('#formularioDireccion').on('submit', function (event) {
-        event.preventDefault(); // Evitar el envío predeterminado del formulario
+        event.preventDefault();
 
         const direccion = $('#direccion').val();
         if (!direccion) {
@@ -142,18 +136,15 @@ if(!validarSesion())
             return;
         }
 
-        // Enviar la dirección al servidor con AJAX
         $.ajax({
             url: '../backend/actualizarDireccion.php',
             type: 'POST',
             data: { direccion: direccion },
             success: function (response) {
-                // Mostrar mensaje en el modal
                 $('#modalMensaje').text(response);
                 $('#modalResultado').modal('show');
             },
             error: function (response) {
-                // Mostrar mensaje de error en el modal
                 console.log(response);
                 $('#modalMensaje').text('Hubo un error al guardar la dirección. Inténtalo nuevamente.', response);
                 $('#modalResultado').modal('show');
@@ -161,7 +152,6 @@ if(!validarSesion())
         });
     });
 
-    // Redirigir al carrito cuando se cierre el modal
     $('#modalResultado').on('hidden.bs.modal', function () {
         window.location.href = 'inicio.php';
     });
