@@ -81,6 +81,24 @@ if (isset($conn) && $conn) {
         </div>
     </nav>
 
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <span>Hola <?php echo $_SESSION['nombre']; ?></span>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+                <div class="empty-cart">
+                    <p>Ve a tu carrito para ver los productos añadidos.</p>
+                </div>
+        </div>
+        <div class="sidebar-actions">
+            <a href="carrito.php" class="btn-primary">Ir al Carrito</a>
+            <a href="direccion.php" class="sidebar-btn">Gestionar Direcciones</a>
+            <button class="sidebar-btn sidebar-logout" onclick="openLogoutModal()">Cerrar Sesión</button>
+        </div>
+    </div>
+
     <section class="cart-page-container">
         <div class="cart-page-content">
             <h1 class="cart-title">Mi Carrito de Compras</h1>
@@ -102,7 +120,7 @@ if (isset($conn) && $conn) {
                         
                         <div class="cart-items-list">
                             <?php foreach ($carrito_items as $item): ?>
-                                <div class="cart-item-card">
+                                <div class="cart-item-card" data-id="<?php echo (int)$item['id_carrito']; ?>" data-subtotal="<?php echo number_format((float)$item['subtotal'], 2, '.', ''); ?>">
                                     <div class="item-image">
                                         <?php $img = !empty($item['imagen']) ? $item['imagen'] : '/placeholder.svg?height=120&width=120'; ?>
                                         <img src="<?php echo htmlspecialchars($img, ENT_QUOTES); ?>" alt="<?php echo htmlspecialchars($item['nombre'], ENT_QUOTES); ?>">
@@ -140,7 +158,7 @@ if (isset($conn) && $conn) {
                             
                             <div class="summary-row">
                                 <span>Subtotal</span>
-                                <span>$<?php echo number_format($total_carrito, 2); ?></span>
+                                <span id="summarySubtotal">$<?php echo number_format($total_carrito, 2); ?></span>
                             </div>
                             
                             <div class="summary-row">
@@ -157,10 +175,10 @@ if (isset($conn) && $conn) {
                             
                             <div class="summary-total">
                                 <span>Total</span>
-                                <span class="total-amount">$<?php echo number_format($total_carrito, 2); ?></span>
+                                <span class="total-amount" id="summaryTotal">$<?php echo number_format($total_carrito, 2); ?></span>
                             </div>
                             
-                            <button class="btn-checkout-main">Proceder al Pago</button>
+                            <a href="pago.php" class="btn-checkout-main">Proceder al Pago</a>
                             <a href="inicio.php" class="btn-continue-shopping-secondary">Continuar Comprando</a>
                             
                             <div class="security-badge">
@@ -206,6 +224,89 @@ if (isset($conn) && $conn) {
             <p>&copy; 2025 Shopware. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <div id="confirmModal" class="confirm-modal" style="display:none; position:fixed; left:0;top:0;right:0;bottom:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;z-index:9999;">
+        <div style="background:#fff;padding:20px;max-width:400px;margin:auto;border-radius:6px;text-align:center;">
+            <h3>Confirmar eliminación</h3>
+            <p>¿Seguro que quieres eliminar este producto del carrito?</p>
+            <div style="margin-top:16px;">
+                <button id="confirmDelete" style="background:#c62828;color:#fff;border:none;padding:8px 12px;margin-right:8px;border-radius:4px;cursor:pointer;">Eliminar</button>
+                <button id="cancelDelete" style="padding:8px 12px;border-radius:4px;cursor:pointer;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const modal = document.getElementById('confirmModal');
+        const confirmBtn = document.getElementById('confirmDelete');
+        const cancelBtn = document.getElementById('cancelDelete');
+        let selectedId = null;
+
+        document.querySelectorAll('.btn-remove').forEach(btn => {
+            btn.addEventListener('click', function(e){
+                e.preventDefault();
+                selectedId = this.dataset.id;
+                if(modal) modal.style.display = 'flex';
+            });
+        });
+
+        if(cancelBtn) cancelBtn.addEventListener('click', function(){ if(modal) modal.style.display='none'; selectedId=null; });
+
+        if(confirmBtn) confirmBtn.addEventListener('click', function(){
+            if(!selectedId) return;
+            const fd = new FormData();
+            fd.append('id_carrito', selectedId);
+            fetch('../backend/eliminarCarrito.php', { method: 'POST', body: fd })
+            .then(res => res.json())
+            .then(data => {
+                if(data && data.success){
+                    if(data.count === 0){
+                        window.location.reload();
+                        return;
+                    }
+                    const card = document.querySelector('.cart-item-card[data-id="' + selectedId + '"]');
+                    if(card) card.remove();
+                    const cartCount = document.getElementById('cartCount');
+                    if(cartCount) cartCount.textContent = data.count;
+                    const header = document.querySelector('.cart-items-header h2');
+                    if(header) header.textContent = data.count + ' Producto' + (data.count !== 1 ? 's' : '');
+                    const subtotalEl = document.getElementById('summarySubtotal');
+                    const totalEl = document.getElementById('summaryTotal');
+                    if(subtotalEl) subtotalEl.textContent = '$' + parseFloat(data.total).toFixed(2);
+                    if(totalEl) totalEl.textContent = '$' + parseFloat(data.total).toFixed(2);
+                    if(modal) modal.style.display = 'none';
+                    selectedId = null;
+                } else {
+                    alert('No se pudo eliminar el producto. Intente de nuevo.');
+                    if(modal) modal.style.display = 'none';
+                }
+            }).catch(err => { console.error(err); alert('Error de red'); if(modal) modal.style.display='none'; });
+        });
+
+        // Close modal on outside click
+        window.addEventListener('click', function(e){ if(e.target === modal){ modal.style.display = 'none'; selectedId = null; } });
+    });
+    </script>
+
+    <script src="../js/modalCerrarSesion.js"></script>
+
+    <div id="logoutModal" class="logout-modal">
+        <div class="logout-modal-content">
+            <div class="logout-modal-header">
+                <h2>¿Cerrar sesión?</h2>
+            </div>
+            <div class="logout-modal-body">
+                <p>¿Estás seguro de que deseas cerrar sesión?</p>
+            </div>
+            <div class="logout-modal-footer">
+                <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancelar</button>
+                <form method="POST" action="../backend/cerrarSesion.php" style="display: inline;">
+                    <button type="submit" name="logout" class="logout-btn-confirm">Confirmar Salida</button>
+                </form>
+            </div>
+        </div>
+    </div>
 
     <script src="../js/sidebar_funcionalidad.js"></script>
 </body>

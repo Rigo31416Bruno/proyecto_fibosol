@@ -355,6 +355,9 @@
   box-shadow: 0 4px 15px rgba(212, 165, 116, 0.3);
   letter-spacing: 0.3px;
   margin-bottom: 1rem;
+  display: block;
+  text-align: center;
+  text-decoration: none;
 }
 
 .btn-checkout-main:hover {
@@ -365,6 +368,14 @@
 .btn-checkout-main:active {
   transform: translateY(-1px);
 }
+
+.btn-checkout-main:disabled,
+.btn-checkout-main.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 
 .btn-continue-shopping-secondary {
   display: block;

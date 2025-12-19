@@ -173,13 +173,13 @@ if (isset($conn) && $conn) {
                 <p>Cómodas y versátiles</p>
             </div>
             <div class="category-card" onclick="document.getElementById('pantalones').scrollIntoView({behavior: 'smooth'})">
-                <img src="/placeholder.svg?height=300&width=300" alt="Pantalones">
+                <img src="../img/pantalones_cargo_negros.jpg" alt="Pantalones">
                 <h3>Pantalones</h3>
                 <p>Ajuste perfecto</p>
             </div>
-            <div class="category-card" onclick="document.getElementById('tenis').scrollIntoView({behavior: 'smooth'})">
-                <img src="/placeholder.svg?height=300&width=300" alt="Tenis">
-                <h3>Tenis</h3>
+            <div class="category-card" onclick="document.getElementById('blusas').scrollIntoView({behavior: 'smooth'})">
+                <img src="../img/blusa_oversized.jpg" alt="Blusas">
+                <h3>Blusas</h3>
                 <p>Comodidad total</p>
             </div>
         </div>

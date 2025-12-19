@@ -108,7 +108,7 @@ if (isset($conn) && $conn) {
         <div class="sidebar-actions">
             <a href="carrito.php" class="btn-primary">Ir al Carrito</a>
             <a href="direccion.php" class="sidebar-btn">Gestionar Direcciones</a>
-            <a href="../backend/cerrarSesion.php" class="sidebar-btn sidebar-logout">Cerrar Sesión</a>
+            <button class="sidebar-btn sidebar-logout" onclick="openLogoutModal()">Cerrar Sesión</button>
         </div>
     </div>
 
@@ -166,6 +166,24 @@ if (isset($conn) && $conn) {
     </footer>
 
     <script src="../js/sidebar_funcionalidad.js"></script>
+    <script src="../js/modalCerrarSesion.js"></script>
+
+<div id="logoutModal" class="logout-modal">
+    <div class="logout-modal-content">
+        <div class="logout-modal-header">
+            <h2>¿Cerrar sesión?</h2>
+        </div>
+        <div class="logout-modal-body">
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+        </div>
+        <div class="logout-modal-footer">
+            <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancelar</button>
+            <form method="POST" action="../backend/cerrarSesion.php" style="display: inline;">
+                <button type="submit" name="logout" class="logout-btn-confirm">Confirmar Salida</button>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

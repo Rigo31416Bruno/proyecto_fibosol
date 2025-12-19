@@ -6,7 +6,7 @@ require_once __DIR__ . '/correo.php';
 $email = isset($_POST['email']) ? trim($_POST['email']) : '';
 
 if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo json_encode(['success' => false, 'message' => 'Correo requerido o invalido.']);
+    echo json_encode(['success' => false, 'message' => 'Correo invalido.']);
     exit;
 }
 
@@ -32,7 +32,7 @@ $del = mysqli_prepare($conn, "DELETE FROM recuperaciones WHERE Correo = ?");
 if ($del) { mysqli_stmt_bind_param($del, "s", $email); mysqli_stmt_execute($del); mysqli_stmt_close($del); }
 
 $code = str_pad((string) random_int(0, 999999), 6, '0', STR_PAD_LEFT);
-$expires = date('Y-m-d H:i:s', time() + 3600); // 1 hora
+$expires = date('Y-m-d H:i:s', time() + 3600);
 $created = date('Y-m-d H:i:s');
 
 $ins = mysqli_prepare($conn, "INSERT INTO recuperaciones (Correo, Codigo, ExpiresAt, CreatedAt) VALUES (?, ?, ?, ?)");
@@ -68,4 +68,8 @@ if ($sent) {
 
 mysqli_close($conn);
 exit;
+
+// forgot_reset_password
+// forgot_send_code
+// forgot_verify_code
 ?>

@@ -15,7 +15,7 @@ if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-$stmt = mysqli_prepare($conn, "SELECT ID_Usuario, Nombre, Contraseña, Estatus FROM usuarios WHERE Correo = ? LIMIT 1");
+$stmt = mysqli_prepare($conn, "SELECT ID_Usuario, Nombre, Contraseña, Estatus, ID_Rol FROM usuarios WHERE Correo = ? LIMIT 1");
 if (!$stmt) {
     echo json_encode(['success' => false, 'message' => 'Error en la consulta']);
     exit();
@@ -46,7 +46,12 @@ session_start();
 $_SESSION['id_usuario'] = (int)$user['ID_Usuario'];
 $_SESSION['nombre'] = $user['Nombre'];
 $_SESSION['correo'] = $correo;
+$_SESSION['id_rol'] = isset($user['ID_Rol']) ? (int)$user['ID_Rol'] : null;
 
-echo json_encode(['success' => true, 'message' => 'Inicio de sesion correcto. Bienvenido ' . ($user['Nombre'] ?? '')], JSON_UNESCAPED_UNICODE);
+echo json_encode([
+    'success' => true,
+    'message' => 'Inicio de sesion correcto. Bienvenido ' . ($user['Nombre'] ?? ''),
+    'role_id' => isset($user['ID_Rol']) ? (int)$user['ID_Rol'] : null
+], JSON_UNESCAPED_UNICODE);
 exit();
 ?>

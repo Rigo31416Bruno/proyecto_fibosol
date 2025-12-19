@@ -64,7 +64,7 @@ if (isset($conn) && $conn) {
     
     <nav class="navbar">
         <div class="navbar-container">
-            <div class="logo"><a href="inicio.php">Shopware&copy;</a></div>
+            <div class="logo">Shopware©</div>
             <button class="menu-toggle" id="menuToggle">
                 <span></span>
                 <span></span>
@@ -102,7 +102,7 @@ if (isset($conn) && $conn) {
         <div class="sidebar-actions">
             <a href="carrito.php" class="btn-primary">Ir al Carrito</a>
             <a href="direccion.php" class="sidebar-btn">Gestionar Direcciones</a>
-            <a href="../backend/cerrarSesion.php" class="sidebar-btn sidebar-logout">Cerrar Sesión</a>
+            <button class="sidebar-btn sidebar-logout" onclick="openLogoutModal()">Cerrar Sesión</button>
         </div>
     </div>
 
@@ -133,7 +133,7 @@ if (isset($conn) && $conn) {
                             <?php if (!empty($tallas)): ?>
                                 <?php foreach ($tallas as $talla): ?>
                                     <label class="size-option">
-                                        <input type="radio" name="id_talla" value="<?php echo (int)$talla['id_talla']; ?>" class="size-radio" data-stock="<?php echo (int)$talla['stock']; ?>" required>
+                                        <input type="radio" name="id_talla" value="<?php echo (int)$talla['id_talla']; ?>" class="size-radio" data-stock="<?php echo (int)$talla['stock']; ?>" <?php echo ($talla['stock'] == 0) ? 'disabled aria-disabled="true"' : 'required'; ?>>
                                         <span class="size-label"><?php echo htmlspecialchars($talla['nombre'], ENT_QUOTES); ?></span>
                                         <?php if ($talla['stock'] == 0): ?>
                                             <span class="size-unavailable">Sin stock</span>
@@ -288,11 +288,11 @@ if (isset($conn) && $conn) {
                         const cantidad = $form.find('select[name="cantidad"]').val();
 
                         if (!id_talla) {
-                            alert('Selecciona una talla.');
+                            showToast('Selecciona una talla.', 'warning');
                             return;
                         }
                         if (!cantidad) {
-                            alert('Selecciona la cantidad.');
+                            showToast('Selecciona la cantidad.', 'warning');
                             return;
                         }
 
@@ -309,7 +309,7 @@ if (isset($conn) && $conn) {
                                 cantidad: cantidad
                             },
                             success: function (res) {
-                                if (res && res.success) {
+                                    if (res && res.success) {
                                     if (typeof res.cartCount !== 'undefined') {
                                         $('#cartCount').text(res.cartCount);
                                     } else {
@@ -317,9 +317,63 @@ if (isset($conn) && $conn) {
                                         const current = parseInt($count.text()) || 0;
                                         $count.text(current + parseInt(cantidad, 10));
                                     }
-                                    alert(res.message || 'Producto agregado al carrito.');
+                                    showToast(res.message || 'Producto agregado al carrito.', 'success');
+                                    // Actualizar stock en la página para la talla seleccionada
+                                    try {
+                                        const selRadio = document.querySelector('input[name="id_talla"][value="' + id_talla + '"]');
+                                        if (selRadio) {
+                                            const cur = parseInt(selRadio.dataset.stock || '0', 10);
+                                            const dec = parseInt(cantidad, 10) || 0;
+                                            let nuevo = cur - dec;
+                                            if (nuevo < 0) nuevo = 0;
+                                            selRadio.dataset.stock = String(nuevo);
+                                            // si stock llega a 0, deshabilitar y mostrar etiqueta
+                                            if (nuevo === 0) {
+                                                selRadio.disabled = true;
+                                                selRadio.setAttribute('aria-disabled', 'true');
+                                                const parent = selRadio.closest('.size-option');
+                                                if (parent && !parent.querySelector('.size-unavailable')) {
+                                                    const badge = document.createElement('span');
+                                                    badge.className = 'size-unavailable';
+                                                    badge.textContent = 'Sin stock';
+                                                    parent.appendChild(badge);
+                                                }
+                                                // si estaba seleccionada, desmarcar y actualizar UI
+                                                if (selRadio.checked) {
+                                                    selRadio.checked = false;
+                                                    // limpiar cantidad
+                                                    quantitySelect.innerHTML = '';
+                                                    const placeholder = document.createElement('option');
+                                                    placeholder.value = '';
+                                                    placeholder.textContent = 'Selecciona cantidad';
+                                                    quantitySelect.appendChild(placeholder);
+                                                    quantitySelect.value = '';
+                                                    quantitySelect.disabled = true;
+                                                    submitBtn.disabled = true;
+                                                    stockInfo.textContent = 'Selecciona una talla primero';
+                                                }
+                                            } else {
+                                                // si aún hay stock y la talla está seleccionada, actualizar cantidad disponible
+                                                const selected = document.querySelector('.size-radio:checked');
+                                                if (selected && selected.value === id_talla) {
+                                                    // rebuild quantity options
+                                                    quantitySelect.innerHTML = '';
+                                                    for (let i = 1; i <= nuevo; i++) {
+                                                        const opt = document.createElement('option');
+                                                        opt.value = String(i);
+                                                        opt.textContent = String(i);
+                                                        quantitySelect.appendChild(opt);
+                                                    }
+                                                    quantitySelect.disabled = false;
+                                                    quantitySelect.value = '1';
+                                                    stockInfo.textContent = `Stock disponible: ${nuevo}`;
+                                                    submitBtn.disabled = false;
+                                                }
+                                            }
+                                        }
+                                    } catch (e) { console.error('Error actualizando stock en UI', e); }
                                 } else {
-                                    alert((res && res.message) || 'No se pudo agregar el producto.');
+                                    showToast((res && res.message) || 'No se pudo agregar el producto.', 'error');
                                 }
                             },
                             error: function (jqXHR, textStatus, errorThrown) {
@@ -328,7 +382,7 @@ if (isset($conn) && $conn) {
                                     return;
                                 }
                                 const text = jqXHR.responseText ? jqXHR.responseText : (errorThrown || textStatus);
-                                alert('Error al agregar al carrito: ' + text);
+                                showToast('Error al agregar al carrito: ' + 'error');
                             },
                             complete: function () {
                                 $submit.prop('disabled', false).text('Agregar al Carrito');
@@ -339,6 +393,50 @@ if (isset($conn) && $conn) {
         });
         </script>
 
+        <script>
+        function showToast(message, type = 'info', timeout = 3500) {
+            const colors = { success: '#2e7d32', error: '#c62828', warning: '#f57c00', info: '#1565c0' };
+            const toast = document.createElement('div');
+            toast.className = 'site-toast';
+            toast.style.position = 'fixed';
+            toast.style.right = '20px';
+            toast.style.bottom = '20px';
+            toast.style.background = colors[type] || colors.info;
+            toast.style.color = '#fff';
+            toast.style.padding = '12px 16px';
+            toast.style.borderRadius = '8px';
+            toast.style.boxShadow = '0 6px 24px rgba(0,0,0,0.2)';
+            toast.style.zIndex = 12000;
+            toast.style.fontWeight = '600';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.transition = 'opacity 300ms';
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 300);
+            }, timeout);
+        }
+        </script>
+
+        </script>
         <script src="../js/sidebar_funcionalidad.js"></script>
+        <script src="../js/modalCerrarSesion.js"></script>
+
+<div id="logoutModal" class="logout-modal">
+    <div class="logout-modal-content">
+        <div class="logout-modal-header">
+            <h2>¿Cerrar sesión?</h2>
+        </div>
+        <div class="logout-modal-body">
+            <p>¿Estás seguro de que deseas cerrar sesión?</p>
+        </div>
+        <div class="logout-modal-footer">
+            <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancelar</button>
+            <form method="POST" action="../backend/cerrarSesion.php" style="display: inline;">
+                <button type="submit" name="logout" class="logout-btn-confirm">Confirmar Salida</button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

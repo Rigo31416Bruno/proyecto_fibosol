@@ -60,19 +60,29 @@
                     data: { correo: correo, contrasena: contrasena },
                     dataType: 'json',
                     success: function(response) {
-                        if (response && response.message) {
-                            $('#mensaje').text(response.message);
-                            if (response.success) {
-                                $('#mensaje').css('color','green');
-                                setTimeout(function() {
-                                    window.location.href = 'inicio.php';
-                            }, 2000);
+                            if (response && response.message) {
+                                $('#mensaje').text(response.message);
+                                if (response.success) {
+                                    $('#mensaje').css('color','green');
+                                    setTimeout(function() {
+                                        // Redirigir según rol: role_id === 2 -> administrador
+                                        if (typeof response.role_id !== 'undefined' && response.role_id !== null) {
+                                            var rid = parseInt(response.role_id, 10);
+                                            if (rid === 2) {
+                                                window.location.href = '../admin/administrador.php';
+                                            } else {
+                                                window.location.href = 'inicio.php';
+                                            }
+                                        } else {
+                                            window.location.href = 'inicio.php';
+                                        }
+                                    }, 800);
+                                } else {
+                                    $('#mensaje').css('color','crimson');
+                                }
                             } else {
-                                $('#mensaje').css('color','crimson');
+                                $('#mensaje').text('Respuesta inesperada del servidor');
                             }
-                        } else {
-                            $('#mensaje').text('Respuesta inesperada del servidor');
-                        }
                     },
                     error: function(xhr, status) {
                         console.error(status, xhr.responseText);
