@@ -21,7 +21,6 @@ if ($id_producto <= 0) {
     exit();
 }
 
-// Verificar que el producto existe y pertenece a la tienda (por seguridad)
 $check = mysqli_prepare($conn, "SELECT id_producto FROM productos WHERE id_producto = ?");
 mysqli_stmt_bind_param($check, "i", $id_producto);
 mysqli_stmt_execute($check);
@@ -46,10 +45,8 @@ if ($row && !empty($row['imagen']) && file_exists('../' . $row['imagen'])) {
     unlink('../' . $row['imagen']);
 }
 
-// Eliminar tallas asociadas (producto_tallas)
 mysqli_query($conn, "DELETE FROM producto_tallas WHERE id_producto = $id_producto");
 
-// Eliminar el producto
 $stmt = mysqli_prepare($conn, "DELETE FROM productos WHERE id_producto = ?");
 mysqli_stmt_bind_param($stmt, "i", $id_producto);
 $success = mysqli_stmt_execute($stmt);

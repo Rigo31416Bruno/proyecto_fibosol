@@ -60,6 +60,8 @@
         </a>
     </nav>
 
+    <br>
+
     <div class="sidebar-footer">
         <a href="../backend/cerrarSesion.php" class="logout-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">

@@ -151,8 +151,8 @@ if ($tallas_query) {
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="nuevo_imagen">URL de Imagen</label>
-                            <input type="text" id="nuevo_imagen" name="imagen" class="form-input" placeholder="../img/producto.jpg">
+                            <label for="nuevo_imagen">Imagen</label>
+                            <input type="file" id="nuevo_imagen" name="imagen" accept="image/*" class="form-input">
                         </div>
                     </div>
 
@@ -320,8 +320,28 @@ if ($tallas_query) {
                         <option value="<?php echo $cat['id_categoria']; ?>"><?php echo htmlspecialchars($cat['nombre']); ?></option>
                         <?php endforeach; ?>
                     </select>
-                    <label>Imagen (URL)</label>
-                    <input type="text" id="edit_imagen" name="imagen" class="form-input">
+                    <label>Imagen</label>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <input type="file" id="edit_imagen" name="imagen" accept="image/*" class="form-input">
+                        <img id="edit_image_preview" src="" alt="Preview" style="width:60px;height:60px;object-fit:cover;border-radius:4px;display:none;">
+                    </div>
+                    <div class="form-section" style="margin-top:12px;">
+                        <h4>Stock por Talla</h4>
+                        <div class="tallas-grid" id="edit_tallas_grid">
+                            <?php foreach ($tallas as $talla): ?>
+                            <div class="talla-item">
+                                <label for="edit_stock_<?php echo $talla['id_talla']; ?>"><?php echo htmlspecialchars($talla['nombre']); ?></label>
+                                <input type="number"
+                                       id="edit_stock_<?php echo $talla['id_talla']; ?>"
+                                       name="stock[<?php echo $talla['id_talla']; ?>]"
+                                       class="form-input"
+                                       placeholder="0"
+                                       min="0"
+                                       value="0">
+                            </div>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
                 </div>
                 <div style="display:flex; gap:0.5rem; justify-content:flex-end; margin-top:1rem;">
                     <button type="button" id="editCancelBtn" class="btn-modal btn-outline">Cancelar</button>
@@ -463,15 +483,46 @@ if ($tallas_query) {
         });
 
         // === Edición ===
-        document.querySelector('.table-container')?.addEventListener('click', function(e) {
+            document.querySelector('.table-container')?.addEventListener('click', function(e) {
             const btn = e.target.closest('.action-btn-edit');
             if (!btn) return;
-            document.getElementById('edit_id').value = btn.dataset.id;
+            const id = btn.dataset.id;
+            document.getElementById('edit_id').value = id;
             document.getElementById('edit_nombre').value = btn.dataset.name;
             document.getElementById('edit_precio').value = btn.dataset.price;
             document.getElementById('edit_categoria').value = btn.dataset.category;
-            document.getElementById('edit_imagen').value = btn.dataset.image || '';
-            document.getElementById('editModal').classList.add('show');
+            // reset file input and show preview if exists
+            const preview = document.getElementById('edit_image_preview');
+            const fileInput = document.getElementById('edit_imagen');
+            try { fileInput.value = null; } catch(e) {}
+            if (btn.dataset.image) {
+                preview.src = btn.dataset.image;
+                preview.style.display = 'block';
+            } else {
+                preview.src = '';
+                preview.style.display = 'none';
+            }
+            // obtener stock actual via AJAX
+            $.getJSON('admin_backend/obtenerProducto.php', { id_producto: id }, function(resp){
+                if (resp && resp.success) {
+                        const product = resp.product || {};
+                        if (product.imagen) {
+                            preview.src = product.imagen;
+                            preview.style.display = 'block';
+                        }
+                    const stock = resp.stock || {};
+                    // rellenar inputs de stock
+                    for (const key in stock) {
+                        const input = document.getElementById('edit_stock_' + key);
+                        if (input) input.value = stock[key];
+                    }
+                    document.getElementById('editModal').classList.add('show');
+                } else {
+                    mostrarResultado('error', 'Error', resp?.message || 'No se pudo cargar datos');
+                }
+            }).fail(function(){
+                mostrarResultado('error', 'Error', 'Error de conexión al cargar producto');
+            });
         });
 
         document.getElementById('editCancelBtn').addEventListener('click', () => {
@@ -480,24 +531,76 @@ if ($tallas_query) {
 
         $('#editProductForm').on('submit', function(ev) {
             ev.preventDefault();
-            const data = $(this).serialize();
-            $.post('admin_backend/editarProducto.php', data, function(resp) {
-                if (resp && resp.success) {
-                    mostrarResultado('success', 'Actualizado', resp.message || 'Producto actualizado');
-                    const btn = document.querySelector(`.action-btn-edit[data-id="${$('#edit_id').val()}"]`);
-                    if (btn) {
-                        const row = btn.closest('tr');
-                        const cols = row.querySelectorAll('td');
-                        cols[2].textContent = $('#edit_nombre').val();
-                        cols[4].textContent = '$' + parseFloat($('#edit_precio').val()).toFixed(2);
-                        cols[3].textContent = $('#edit_categoria option:selected').text();
+            const form = document.getElementById('editProductForm');
+            const fd = new FormData(form);
+            const btn = form.querySelector('button[type="submit"]');
+            if (btn) btn.disabled = true;
+
+            $.ajax({
+                url: 'admin_backend/editarProducto.php',
+                type: 'POST',
+                data: fd,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp && resp.success) {
+                        mostrarResultado('success', 'Actualizado', resp.message || 'Producto actualizado');
+                        const btnEl = document.querySelector(`.action-btn-edit[data-id="${$('#edit_id').val()}"]`);
+                        if (btnEl) {
+                            const row = btnEl.closest('tr');
+                            const cols = row.querySelectorAll('td');
+                            cols[2].textContent = $('#edit_nombre').val();
+                            cols[4].textContent = '$' + parseFloat($('#edit_precio').val()).toFixed(2);
+                            cols[3].textContent = $('#edit_categoria option:selected').text();
+                        }
+                        document.getElementById('editModal').classList.remove('show');
+                        // refrescar página después de un pequeño retraso para que se vea la notificación
+                        setTimeout(function(){ window.location.reload(); }, 700);
+                    } else {
+                        mostrarResultado('error', 'Error', resp?.message || 'No se pudo actualizar');
                     }
-                    document.getElementById('editModal').classList.remove('show');
-                } else {
-                    mostrarResultado('error', 'Error', resp?.message || 'No se pudo actualizar');
+                },
+                error: function() {
+                    mostrarResultado('error', 'Error', 'Error de conexión');
+                },
+                complete: function() {
+                    if (btn) btn.disabled = false;
                 }
-            }, 'json').fail(() => {
-                mostrarResultado('error', 'Error', 'Error de conexión');
+            });
+        });
+
+        // === Nuevo producto: enviar con FormData (archivo) ===
+        $('#nuevoProductoForm').on('submit', function(ev) {
+            ev.preventDefault();
+            const form = document.getElementById('nuevoProductoForm');
+            const btn = form.querySelector('button[type="submit"]');
+            const fd = new FormData(form);
+
+            // disable button
+            if (btn) btn.disabled = true;
+
+            $.ajax({
+                url: 'admin_backend/agregarProducto.php',
+                type: 'POST',
+                data: fd,
+                processData: false,
+                contentType: false,
+                dataType: 'json',
+                success: function(resp) {
+                    if (resp && resp.success) {
+                        mostrarResultado('success', 'Creado', resp.message || 'Producto creado');
+                        // recargar para mostrar nuevo producto
+                        setTimeout(function(){ window.location.reload(); }, 700);
+                    } else {
+                        mostrarResultado('error', 'Error', resp?.message || 'No se pudo crear el producto');
+                        if (btn) btn.disabled = false;
+                    }
+                },
+                error: function() {
+                    mostrarResultado('error', 'Error', 'Error de conexión');
+                    if (btn) btn.disabled = false;
+                }
             });
         });
 
