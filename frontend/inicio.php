@@ -56,7 +56,7 @@ if (isset($conn) && $conn) {
                 <li><a href="#inicio">Inicio</a></li>
                 <li><a href="#camisas">Camisas</a></li>
                 <li><a href="#pantalones">Pantalones</a></li>
-                <li><a href="#tenis">Tenis</a></li>
+                <li><a href="#blusas">Blusas</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
             <div class="auth-buttons">

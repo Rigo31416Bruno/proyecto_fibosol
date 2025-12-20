@@ -103,6 +103,24 @@ if (isset($conn) && $conn) {
         </div>
     </nav>
 
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <span>Hola <?php echo $_SESSION['nombre']; ?></span>
+            <button class="close-cart" id="closeCart">&times;</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+                <div class="empty-cart">
+                    <p>Ve a tu carrito para ver los productos añadidos.</p>
+                </div>
+        </div>
+        <div class="sidebar-actions">
+            <a href="carrito.php" class="btn-primary">Ir al Carrito</a>
+            <a href="direccion.php" class="sidebar-btn">Gestionar Direcciones</a>
+            <button class="sidebar-btn sidebar-logout" onclick="openLogoutModal()">Cerrar Sesión</button>
+        </div>
+    </div>
+
     <div class="payment-container">
         <div class="payment-content">
             <div class="payment-header">
@@ -143,9 +161,10 @@ if (isset($conn) && $conn) {
                         <form id="paymentForm" class="payment-form">
                             <!-- Tarjetas aceptadas -->
                             <div class="accepted-cards">
-                                <img src="/placeholder.svg?height=30&width=48" alt="Visa">
-                                <img src="/placeholder.svg?height=30&width=48" alt="Mastercard">
-                                <img src="/placeholder.svg?height=30&width=48" alt="American Express">
+                                <label class="radio"> <input type="radio" name="tarjeta" value="mastercard" checked required> <span><img width="30" src="https://img.icons8.com/color/48/000000/mastercard.png"/></span> </label>
+                    <label class="radio"> <input type="radio" name="tarjeta" value="visa" required> <span><img width="30" src="https://img.icons8.com/officel/48/000000/visa.png"/></span> </label>
+                    <label class="radio"> <input type="radio" name="tarjeta" value="amex"> <span><img width="30" src="https://img.icons8.com/ultraviolet/48/000000/amex.png"/></span> </label>
+                    <label class="radio"> <input type="radio" name="tarjeta" value="paypal" required> <span><img width="30" src="https://img.icons8.com/officel/48/000000/paypal.png"/></span> </label>
                             </div>
 
                 
@@ -267,7 +286,7 @@ if (isset($conn) && $conn) {
 
                         <div class="summary-divider"></div>
 
-                        <div class="summary-totals">
+                            <div class="summary-totals">
                             <div class="summary-row">
                                 <span>Subtotal</span>
                                 <span>$<?php echo number_format($total_carrito, 2); ?></span>
@@ -276,14 +295,10 @@ if (isset($conn) && $conn) {
                                 <span>Envío</span>
                                 <span class="free-shipping">Gratis</span>
                             </div>
-                            <div class="summary-row">
-                                <span>IVA (16%)</span>
-                                <span>$<?php echo number_format($total_carrito * 0.16, 2); ?></span>
-                            </div>
                             <div class="summary-divider"></div>
                             <div class="summary-total">
                                 <span>Total a Pagar</span>
-                                <span class="total-amount">$<?php echo number_format($total_carrito * 1.16, 2); ?></span>
+                                <span class="total-amount">$<?php echo number_format($total_carrito, 2); ?></span>
                             </div>
                         </div>
 
@@ -352,7 +367,7 @@ if (isset($conn) && $conn) {
                 </svg>
             </div>
             <h3 class="modal-title">Confirmar Pago</h3>
-            <p class="modal-message">Estás a punto de realizar un pago de <strong class="highlight-amount">$<?php echo number_format($total_carrito * 1.16, 2); ?></strong></p>
+            <p class="modal-message">Estás a punto de realizar un pago de <strong class="highlight-amount">$<?php echo number_format($total_carrito, 2); ?></strong></p>
             <p class="modal-submessage">¿Deseas continuar con esta transacción?</p>
             <div class="modal-actions">
                 <button id="confirmPaymentBtn" class="btn-modal btn-primary">
@@ -380,7 +395,7 @@ if (isset($conn) && $conn) {
             <div class="success-details">
                 <div class="success-item">
                     <span class="success-label">Total Pagado:</span>
-                    <span class="success-value">$<?php echo number_format($total_carrito * 1.16, 2); ?></span>
+                    <span class="success-value">$<?php echo number_format($total_carrito, 2); ?></span>
                 </div>
             </div>
             <div class="modal-actions">
@@ -420,6 +435,25 @@ if (isset($conn) && $conn) {
     <!-- Toast Notifications Container -->
     <div id="toastContainer" class="toast-container"></div>
 
+    <div id="logoutModal" class="logout-modal">
+        <div class="logout-modal-content">
+            <div class="logout-modal-header">
+                <h2>¿Cerrar sesión?</h2>
+            </div>
+            <div class="logout-modal-body">
+                <p>¿Estás seguro de que deseas cerrar sesión?</p>
+            </div>
+            <div class="logout-modal-footer">
+                <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancelar</button>
+                <form method="POST" action="../backend/cerrarSesion.php" style="display: inline;">
+                    <button type="submit" name="logout" class="logout-btn-confirm">Confirmar Salida</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="../js/pago.js"></script>
+    <script src="../js/sidebar_funcionalidad.js"></script>
+    <script src="../js/modalCerrarSesion.js"></script>
 </body>
 </html>

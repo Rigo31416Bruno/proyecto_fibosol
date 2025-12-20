@@ -174,27 +174,62 @@
   height: 16px;
 }
 
-/* Accepted Cards */
+/* Accepted Cards (visual upgrade) */
 .accepted-cards {
   display: flex;
-  gap: 1rem;
+  gap: 12px;
   margin-bottom: 2rem;
-  padding: 1rem;
-  background: var(--light-gray);
-  border-radius: 8px;
+  padding: 10px;
+  background: transparent;
+  border-radius: 14px;
   justify-content: center;
 }
 
-.accepted-cards img {
-  height: 30px;
-  width: 48px;
-  object-fit: contain;
-  opacity: 0.7;
-  transition: opacity 0.3s ease;
+.accepted-cards label.radio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(20, 20, 20, 0.06);
+  border: 1px solid rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
 }
 
-.accepted-cards img:hover {
-  opacity: 1;
+.accepted-cards label.radio input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.accepted-cards label.radio span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  border-radius: 8px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.accepted-cards label.radio img {
+  height: 28px;
+  width: auto;
+  display: block;
+  filter: saturate(0.95) contrast(0.98);
+}
+
+.accepted-cards label.radio:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(20,20,20,0.08);
+}
+
+.accepted-cards label.radio input:checked + span {
+  box-shadow: 0 10px 30px rgba(212,165,116,0.20);
+  transform: translateY(-4px) scale(1.02);
 }
 
 /* Form Styles */
@@ -826,21 +861,61 @@
   height: 16px;
 }
 
-/* Tarjetas aceptadas */
+/* Tarjetas aceptadas (mejora visual coherente) */
 .accepted-cards {
   display: flex;
   gap: 12px;
   margin-bottom: 25px;
-  padding: 15px;
-  background: #f8f9fa;
-  border-radius: 8px;
+  padding: 12px;
+  background: transparent;
+  border-radius: 12px;
   justify-content: center;
 }
 
-.accepted-cards img {
-  height: 30px;
+.accepted-cards label.radio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(20, 20, 20, 0.06);
+  border: 1px solid rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.accepted-cards label.radio input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+}
+
+.accepted-cards label.radio span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  border-radius: 8px;
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.accepted-cards label.radio img {
+  height: 28px;
   width: auto;
-  object-fit: contain;
+  display: block;
+}
+
+.accepted-cards label.radio:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(20,20,20,0.08);
+}
+
+.accepted-cards label.radio input:checked + span {
+  box-shadow: 0 10px 30px rgba(212,165,116,0.20);
+  transform: translateY(-4px) scale(1.02);
 }
 
 /* Grupos de formulario */

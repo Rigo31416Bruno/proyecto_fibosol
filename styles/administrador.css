@@ -509,7 +509,7 @@ flex-direction: column;
   padding: 14px 16px;
   border-radius: 12px;
   color: var(--text-muted);
-  background: rgba(185, 74, 74, 0.12); /* muted translucent red */
+  background: rgba(185, 74, 74, 0.12);
   text-decoration: none;
   transition: background 0.18s ease, transform 0.08s ease, color 0.15s ease;
 }
